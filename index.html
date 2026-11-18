@@ -1,0 +1,1814 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>峴港・會安 4天3夜隨身導航與記帳 App</title>
+<style>
+  :root {
+    --bg: #f2f5f9;
+    --card: #ffffff;
+    --ink: #1a2233;
+    --muted: #69758c;
+    --primary: #0284c7;
+    --primary-dark: #0369a1;
+    --primary-light: #e0f2fe;
+    --accent: #f97316;
+    --accent-light: #ffedd5;
+    --grab: #00b14f;
+    --grab-light: #dcfce7;
+    --danger: #ef4444;
+    --danger-light: #fee2e2;
+    --warn: #d97706;
+    --warn-light: #fef3c7;
+    --radius: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: #dce3ee; color: var(--ink); font-family: -apple-system, BlinkMacSystemFont, "Noto Sans TC", "Microsoft JhengHei", sans-serif; }
+  body { display: flex; justify-content: center; }
+  .phone {
+    width: 100%;
+    max-width: 460px;
+    height: 100vh;
+    height: 100dvh;
+    background: var(--bg);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 0 40px rgba(15, 23, 42, 0.15);
+  }
+  @media (min-width: 600px) {
+    body { padding: 20px 0; }
+    .phone { height: calc(100vh - 40px); border-radius: 34px; border: 7px solid #1e293b; }
+  }
+
+  /* Header */
+  header {
+    background: linear-gradient(135deg, #0369a1 0%, #0284c7 55%, #0ea5e9 100%);
+    color: #fff;
+    padding: 14px 16px 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.25);
+    z-index: 10;
+  }
+  .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .brand { font-size: 1.1rem; font-weight: 800; letter-spacing: 0.3px; display: flex; align-items: center; gap: 6px; }
+  .clock-pill {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(6px);
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .pulse {
+    width: 7px; height: 7px; border-radius: 50%; background: #4ade80;
+    box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7);
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(74, 222, 128, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+  }
+
+  /* Header Budget Bar */
+  .wallet-bar {
+    background: rgba(15, 23, 42, 0.22);
+    border-radius: 13px;
+    padding: 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .wallet-bar:active { transform: scale(0.99); }
+  .wb-col { display: flex; flex-direction: column; }
+  .wb-label { font-size: 0.68rem; opacity: 0.85; }
+  .wb-val { font-size: 0.92rem; font-weight: 800; }
+  .wb-sub { font-size: 0.68rem; opacity: 0.85; }
+  .wb-remain { color: #86efac; }
+  .wb-remain.low { color: #fde047; }
+  .wb-remain.over { color: #fca5a5; }
+
+  /* Day Tabs */
+  .day-tabs {
+    display: flex;
+    gap: 6px;
+    padding: 10px 12px 8px;
+    background: #fff;
+    border-bottom: 1px solid #e2e8f0;
+    overflow-x: auto;
+    flex-shrink: 0;
+  }
+  .day-tabs::-webkit-scrollbar { display: none; }
+  .day-tab {
+    flex-shrink: 0;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+    line-height: 1.25;
+  }
+  .day-tab small { display: block; font-size: 0.65rem; font-weight: 500; opacity: 0.85; }
+  .day-tab.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+    box-shadow: 0 3px 10px rgba(2, 132, 199, 0.25);
+  }
+
+  /* Main Content */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px 14px 96px;
+    scroll-behavior: smooth;
+  }
+  .view { display: none; animation: fadeIn 0.22s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 3px 14px rgba(15, 23, 42, 0.05);
+    border: 1px solid #eef2f6;
+  }
+  .sec-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* Live Radar Card */
+  .radar-card {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 6px 20px rgba(15, 23, 42, 0.22);
+    border: 1px solid #334155;
+  }
+  .radar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .radar-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 999px;
+  }
+  .radar-now { font-size: 0.95rem; font-weight: 800; margin-bottom: 4px; color: #38bdf8; }
+  .radar-next-box {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    border-left: 3px solid #4ade80;
+  }
+  .radar-eta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .eta-pill {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    padding: 7px 9px;
+  }
+  .eta-pill small { font-size: 0.66rem; color: #cbd5e1; display: block; }
+  .eta-pill b { font-size: 1.02rem; color: #4ade80; }
+  .eta-pill.stay b { color: #fbbf24; }
+  .stay-adjust {
+    display: flex; align-items: center; gap: 6px; margin-top: 8px; font-size: 0.75rem; color: #cbd5e1;
+  }
+  .stay-adjust button {
+    background: rgba(255,255,255,0.15); color: #fff; border: none; border-radius: 6px;
+    padding: 2px 8px; font-weight: 700; cursor: pointer;
+  }
+
+  /* Weather & Day Summary */
+  .weather-card {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0f9ff 100%);
+    border: 1px solid #bae6fd;
+    border-radius: var(--radius);
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  .w-row { display: flex; justify-content: space-between; align-items: center; }
+  .w-temp { font-size: 1.15rem; font-weight: 800; color: #0369a1; }
+  .w-cloth { font-size: 0.78rem; color: #0c4a6e; margin-top: 6px; line-height: 1.45; background: rgba(255,255,255,0.65); padding: 6px 9px; border-radius: 10px; }
+
+  /* Checklist */
+  .chk-item {
+    display: flex; align-items: center; gap: 10px; padding: 8px 4px;
+    border-bottom: 1px dashed #e2e8f0; cursor: pointer; font-size: 0.84rem;
+  }
+  .chk-item:last-child { border-bottom: none; }
+  .chk-item input { width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer; flex-shrink: 0; }
+  .chk-item.checked span { text-decoration: line-through; color: var(--muted); }
+
+  /* Stop Card */
+  .stop-card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 8px;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.05);
+    border: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .stop-card.is-current {
+    border-color: var(--accent);
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.18);
+    background: #fffaf5;
+  }
+  .stop-card.is-done {
+    opacity: 0.72;
+    background: #f8fafc;
+  }
+  .stop-head { display: flex; gap: 11px; align-items: flex-start; cursor: pointer; }
+  .stop-icon {
+    width: 42px; height: 42px; border-radius: 13px; background: var(--primary-light);
+    display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0;
+  }
+  .stop-card.is-current .stop-icon { background: var(--accent-light); }
+  .stop-card.is-done .stop-icon { background: #dcfce7; }
+  .stop-main { flex: 1; min-width: 0; }
+  .stop-time-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 2px; }
+  .stop-time { font-size: 0.75rem; font-weight: 800; color: var(--primary); }
+  .eta-live-tag {
+    font-size: 0.7rem; font-weight: 800; background: #dcfce7; color: #15803d;
+    padding: 1px 7px; border-radius: 999px;
+  }
+  .stop-title { font-size: 1rem; font-weight: 800; line-height: 1.3; margin-bottom: 2px; }
+  .stop-card.is-done .stop-title { text-decoration: line-through; color: var(--muted); }
+  .stop-addr { font-size: 0.75rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .stop-cost-badge {
+    display: inline-block; margin-top: 5px; font-size: 0.73rem; font-weight: 700;
+    background: #f1f5f9; color: #334155; padding: 2px 8px; border-radius: 8px;
+  }
+
+  /* Quick Action Bar inside Stop */
+  .stop-actions {
+    display: flex; gap: 6px; margin-top: 10px; padding-top: 9px; border-top: 1px solid #f1f5f9;
+  }
+  .act-btn {
+    flex: 1; border: 1px solid #e2e8f0; background: #f8fafc; color: var(--ink);
+    font-size: 0.74rem; font-weight: 700; padding: 7px 6px; border-radius: 10px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
+    font-family: inherit;
+  }
+  .act-btn:active { transform: scale(0.97); }
+  .act-btn.here-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .act-btn.done-btn.active { background: #16a34a; color: #fff; border-color: #16a34a; }
+  .act-btn.exp-btn { background: #eff6ff; color: var(--primary-dark); border-color: #bfdbfe; }
+
+  /* Expandable Stop Details */
+  .stop-detail { display: none; margin-top: 10px; padding-top: 10px; border-top: 1px dashed #cbd5e1; font-size: 0.82rem; line-height: 1.55; }
+  .stop-card.open .stop-detail { display: block; }
+  .tag-list { margin-bottom: 6px; }
+  .tag {
+    display: inline-block; font-size: 0.7rem; font-weight: 700; padding: 2px 8px;
+    border-radius: 999px; background: var(--primary-light); color: var(--primary-dark); margin: 0 4px 4px 0;
+  }
+  .warn-box {
+    background: var(--warn-light); color: #92400e; padding: 7px 10px; border-radius: 10px;
+    font-size: 0.78rem; margin-top: 6px; font-weight: 600;
+  }
+  .link-btns { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .btn-link {
+    flex: 1; min-width: 110px; text-align: center; text-decoration: none; font-size: 0.76rem;
+    font-weight: 700; padding: 8px 10px; border-radius: 10px; background: var(--primary); color: #fff;
+    border: none; cursor: pointer; font-family: inherit;
+  }
+  .btn-link.secondary { background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; }
+  .btn-link.book { background: #7c3aed; color: #fff; }
+
+  /* Transport Leg Connector (How to go to next stop) */
+  .leg-card {
+    margin: -2px 0 10px 14px;
+    padding: 10px 12px;
+    border-left: 3px dashed #94a3b8;
+    background: #f8fafc;
+    border-radius: 0 14px 14px 0;
+    font-size: 0.78rem;
+  }
+  .leg-card.highlight-leg {
+    border-left: 4px solid var(--grab);
+    background: #f0fdf4;
+  }
+  .leg-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .badge-mode {
+    font-size: 0.7rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; color: #fff;
+  }
+  .m-grab { background: var(--grab); }
+  .m-walk { background: #64748b; }
+  .m-car { background: #0284c7; }
+  .m-flight { background: #7c3aed; }
+  .leg-desc { color: #334155; line-height: 1.45; margin-bottom: 6px; }
+  .leg-transit-time {
+    background: #fef9c3; color: #854d0e; padding: 4px 8px; border-radius: 8px;
+    font-size: 0.73rem; font-weight: 700; margin-bottom: 6px;
+  }
+  .leg-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .leg-btn {
+    text-decoration: none; font-size: 0.72rem; font-weight: 700; padding: 5px 9px;
+    border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; color: var(--ink);
+    cursor: pointer; display: inline-flex; align-items: center; gap: 3px; font-family: inherit;
+  }
+  .leg-btn.grab { background: var(--grab); color: #fff; border-color: var(--grab); }
+
+  /* Wallet / Expense View */
+  .budget-hero {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .bh-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+  .bh-box { background: rgba(255,255,255,0.08); padding: 10px; border-radius: 12px; }
+  .bh-box small { font-size: 0.7rem; color: #94a3b8; display: block; }
+  .bh-box b { font-size: 1.05rem; }
+  .form-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .inp {
+    width: 100%; padding: 9px 11px; border-radius: 10px; border: 1px solid #cbd5e1;
+    font-size: 0.86rem; font-family: inherit; background: #fff;
+  }
+  .exp-item {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 9px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.83rem;
+  }
+  .exp-item:last-child { border-bottom: none; }
+  .del-btn {
+    border: none; background: #fee2e2; color: #dc2626; border-radius: 6px;
+    padding: 3px 7px; font-size: 0.72rem; cursor: pointer; margin-left: 8px;
+  }
+
+  /* Modal */
+  .modal-mask {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.55);
+    display: none; align-items: center; justify-content: center; z-index: 100; padding: 16px;
+  }
+  .modal-mask.show { display: flex; }
+  .modal-box {
+    background: #fff; width: 100%; max-width: 380px; border-radius: 20px; padding: 18px;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 82px; left: 50%; transform: translateX(-50%);
+    background: rgba(15, 23, 42, 0.92); color: #fff; padding: 8px 16px;
+    border-radius: 999px; font-size: 0.8rem; font-weight: 700; display: none; z-index: 200;
+  }
+
+  /* Bottom Nav */
+  nav {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(12px);
+    display: flex; padding: 6px 6px calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid #e2e8f0; z-index: 20;
+  }
+  nav button {
+    flex: 1; border: none; background: none; font-family: inherit;
+    font-size: 0.7rem; color: var(--muted); display: flex; flex-direction: column;
+    align-items: center; gap: 2px; cursor: pointer; padding: 4px 0;
+  }
+  nav button span { font-size: 1.25rem; transition: transform 0.15s; }
+  nav button.active { color: var(--primary); font-weight: 800; }
+  nav button.active span { transform: translateY(-2px) scale(1.1); }
+</style>
+</head>
+<body>
+<div class="phone">
+  <header>
+    <div class="top-row">
+      <div class="brand">🇻🇳 峴港・會安隨身導航</div>
+      <div class="clock-pill"><i class="pulse"></i><span id="liveClock">--:--:--</span></div>
+    </div>
+    <div class="wallet-bar" id="headerWalletBtn" title="點擊進入記帳本">
+      <div class="wb-col">
+        <span class="wb-label">總預算 (VND)</span>
+        <span class="wb-val" id="hdrBudget">5,000,000 ₫</span>
+        <span class="wb-sub" id="hdrBudgetTwd">≈ NT$6,500</span>
+      </div>
+      <div class="wb-col">
+        <span class="wb-label">已記錄開銷</span>
+        <span class="wb-val" id="hdrSpent">0 ₫</span>
+        <span class="wb-sub" id="hdrSpentTwd">≈ NT$0</span>
+      </div>
+      <div class="wb-col" style="text-align:right">
+        <span class="wb-label">剩餘可用金額</span>
+        <span class="wb-val wb-remain" id="hdrRemain">5,000,000 ₫</span>
+        <span class="wb-sub" id="hdrRemainTwd">≈ NT$6,500</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Day Selector Tabs (shown on Plan view) -->
+  <div class="day-tabs" id="dayTabs"></div>
+
+  <main id="mainScroll">
+    <!-- VIEW 1: 行程與即時導航 -->
+    <section class="view active" id="v-plan">
+      <!-- 即時進度與下一站時間推測雷達 -->
+      <div class="radar-card" id="radarBox"></div>
+
+      <!-- 當日天氣預報與穿搭 -->
+      <div id="weatherBox"></div>
+
+      <!-- 前一天/出發前檢查清單 -->
+      <div id="checklistBox"></div>
+
+      <!-- 當日預計花費總覽 -->
+      <div id="dayBudgetBox"></div>
+
+      <!-- 站點與下一站交通列表 -->
+      <div id="stopsContainer"></div>
+    </section>
+
+    <!-- VIEW 2: 記帳與預算管理 -->
+    <section class="view" id="v-wallet">
+      <div class="budget-hero">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:0.75rem;color:#94a3b8">剩餘可用預算</div>
+            <div style="font-size:1.55rem;font-weight:800;color:#4ade80" id="wRemainBig">5,000,000 ₫</div>
+            <div style="font-size:0.8rem;color:#cbd5e1" id="wRemainBigTwd">約台幣 NT$6,500</div>
+          </div>
+          <button class="btn-link secondary" style="flex:0;min-width:auto;padding:7px 12px" id="editBudgetBtn">⚙️ 設定預算/匯率</button>
+        </div>
+        <div class="bh-grid">
+          <div class="bh-box">
+            <small>設定總預算</small>
+            <b id="wTotalBig">5,000,000 ₫</b>
+          </div>
+          <div class="bh-box">
+            <small>累積實際花費</small>
+            <b id="wSpentBig" style="color:#fbbf24">0 ₫</b>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-title">➕ 新增一筆開銷</div>
+        <div class="form-row">
+          <select class="inp" id="expDay" style="flex:1">
+            <option value="d1">Day 1 (11/19 會安)</option>
+            <option value="d2">Day 2 (11/20 峴港/西施)</option>
+            <option value="d3">Day 3 (11/21 美溪/靈應寺)</option>
+            <option value="d4">Day 4 (11/22 咖啡/機場)</option>
+          </select>
+          <select class="inp" id="expCat" style="flex:1">
+            <option value="🍽️ 餐飲">🍽️ 餐飲咖啡</option>
+            <option value="🚗 交通">🚗 交通 (Grab/包車)</option>
+            <option value="💆 按摩">💆 按摩 Spa</option>
+            <option value="🎟️ 門票">🎟️ 門票娛樂</option>
+            <option value="🛍️ 購物">🛍️ 伴手禮購物</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <input type="text" class="inp" id="expTitle" placeholder="項目名稱（例：Grab 去西施按摩）">
+        </div>
+        <div class="form-row">
+          <input type="number" class="inp" id="expAmt" placeholder="金額" style="flex:1.4">
+          <select class="inp" id="expCur" style="flex:1">
+            <option value="VND">越南盾 (₫)</option>
+            <option value="TWD">台幣 (NT$)</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+          <button type="button" class="leg-btn" onclick="quickFillAmt(50000)">+5萬盾</button>
+          <button type="button" class="leg-btn" onclick="quickFillAmt(100000)">+10萬盾</button>
+          <button type="button" class="leg-btn" onclick="quickFillAmt(200000)">+20萬盾</button>
+          <button type="button" class="leg-btn" onclick="quickFillAmt(500000)">+50萬盾</button>
+          <button type="button" class="leg-btn" onclick="quickFillAmt(1000000)">+100萬盾</button>
+        </div>
+        <button class="btn-link" style="width:100%;padding:10px" id="addExpBtn">💾 儲存這筆開銷</button>
+      </div>
+
+      <div class="card">
+        <div class="sec-title">
+          <span>📜 開銷明細紀錄</span>
+          <button class="leg-btn" id="clearExpBtn" style="color:#dc2626">清空紀錄</button>
+        </div>
+        <div id="expListBox"></div>
+      </div>
+    </section>
+
+    <!-- VIEW 3: 地圖與路線 -->
+    <section class="view" id="v-map">
+      <div class="card">
+        <div class="sec-title">🗺️ 快速切換地圖點位</div>
+        <div id="mapPills" style="display:flex;gap:6px;overflow-x:auto;padding-bottom:6px"></div>
+        <div style="height:340px;border-radius:14px;overflow:hidden;margin-top:8px;background:#e2e8f0">
+          <iframe id="mapFrame" style="width:100%;height:100%;border:0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        <div class="link-btns" style="margin-top:10px">
+          <a class="btn-link" id="openFullDayRoute" target="_blank">🧭 用 Google Maps 開啟當日完整路線</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 4: 訂位連結與憑證 -->
+    <section class="view" id="v-bookings">
+      <div class="card">
+        <div class="sec-title">🔗 必存訂位與包車預約連結</div>
+        <div style="font-size:0.82rem;line-height:1.6;color:#334155">
+          <div style="padding:8px 0;border-bottom:1px solid #f1f5f9">
+            <b>🍷 Le Comptoir 法式餐廳（Day 3 週六晚餐）</b><br>
+            座位少，若選擇吃法餐請務必私訊粉專訂位：
+            <div class="link-btns">
+              <a class="btn-link book" target="_blank" href="https://www.facebook.com/lecomptoirdanang/">💬 FB 粉專私訊訂位</a>
+              <a class="btn-link secondary" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Le+Comptoir+16+Che+Lan+Vien+Da+Nang">📍 Google 地圖</a>
+            </div>
+          </div>
+          <div style="padding:8px 0;border-bottom:1px solid #f1f5f9">
+            <b>💆 Ngọc Linh Spa 越式洗頭（Day 3 下午）</b><br>
+            距離 Nexus House 步行 3 分鐘，可透過地圖頁面預約：
+            <div class="link-btns">
+              <a class="btn-link book" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Ngoc+Linh+Spa+04+Phan+Ton+Da+Nang">📍 開啟店家地圖預約</a>
+            </div>
+          </div>
+          <div style="padding:8px 0">
+            <b>🚐 Klook / KKday 機場接送 ＆ 五行山包車</b><br>
+            Day 1 峴港機場➔會安、Day 2 會安➔五行山➔山姆飯店：
+            <div class="link-btns">
+              <a class="btn-link" target="_blank" href="https://www.klook.com/zh-TW/city/83-da-nang-things-to-do/">🚐 Klook 峴港包車/接機</a>
+              <a class="btn-link secondary" target="_blank" href="https://www.kkday.com/zh-tw/city/da-nang">🚐 KKday 峴港專區</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sec-title">🎫 已確認機票與住宿憑證</div>
+        <div style="font-size:0.82rem;line-height:1.65">
+          <div style="padding:7px 0;border-bottom:1px solid #f1f5f9">
+            <b>✈️ 去程機票｜11/19 (四) 台灣虎航 IT 551</b><br>
+            16:50 台北(TPE) ➔ 18:25 峴港(DAD)｜訂位代號：<b style="color:var(--primary)">EYSMUA</b>
+          </div>
+          <div style="padding:7px 0;border-bottom:1px solid #f1f5f9">
+            <b>🏨 Day 1 住宿｜11/19–11/20 會安</b><br>
+            M Village Resort Riverbeach Hoi An｜Agoda 編號：<b>1796020565</b>
+          </div>
+          <div style="padding:7px 0;border-bottom:1px solid #f1f5f9">
+            <b>🏨 Day 2 住宿｜11/20–11/21 峴港</b><br>
+            峴港山姆飯店和公寓 (Sam Hotel)｜Trip.com 編號：<b>1616334979812577</b>
+          </div>
+          <div style="padding:7px 0;border-bottom:1px solid #f1f5f9">
+            <b>🏨 Day 3 住宿｜11/21–11/22 美溪沙灘</b><br>
+            Nexus House An Thượng｜Agoda 編號：<b>1798543709</b>
+          </div>
+          <div style="padding:7px 0">
+            <b>✈️ 國內線機票｜11/22 (日) 越捷航空</b><br>
+            18:15 峴港(DAD) ➔ 19:40 胡志明市(SGN)｜Agoda 編號：<b>1798569648</b>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 預算設定 Modal -->
+  <div class="modal-mask" id="budgetModal">
+    <div class="modal-box">
+      <div class="sec-title">⚙️ 設定峴港總預算與匯率</div>
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">總預算（越南盾 VND）：</div>
+      <input type="number" class="inp" id="modalBudgetInp" style="margin-bottom:10px" value="5000000">
+      <div style="font-size:0.8rem;color:var(--muted);margin-bottom:8px">匯率設定（每 10,000 越南盾 = 幾元台幣）：</div>
+      <input type="number" step="0.1" class="inp" id="modalRateInp" style="margin-bottom:14px" value="13">
+      <div style="display:flex;gap:8px">
+        <button class="btn-link secondary" id="closeModalBtn">取消</button>
+        <button class="btn-link" id="saveModalBtn">儲存設定</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toastMsg">已複製！</div>
+
+  <nav>
+    <button class="active" data-v="plan"><span>🗓️</span>行程導航</button>
+    <button data-v="wallet"><span>💰</span>記帳本</button>
+    <button data-v="map"><span>🗺️</span>地圖路線</button>
+    <button data-v="bookings"><span>🎫</span>訂位憑證</button>
+  </nav>
+</div>
+
+<script>
+// ==================== 行程完整資料庫 ====================
+const DAYS = [
+  {
+    id: "d0",
+    tab: "📋 行前總檢",
+    sub: "11/18 出發前",
+    date: "2026-11-18",
+    title: "11/18 (三) 出發前一晚必檢清單",
+    weather: {
+      temp: "23°C – 28°C",
+      rain: "90% (東北季風陣雨)",
+      desc: "峴港 11/19–11/22 偶有陣雨，氣溫舒適微涼",
+      cloth: "👕 必備穿搭：夏天短袖短褲 + 1件防潑水薄外套 + 1雙防水拖鞋/涼鞋（下雨或沙灘超實用）+ 1件過膝褲（進五行山與靈應寺穿）+ 摺疊傘。"
+    },
+    checklistTitle: "🎒 11/18 出發桃園機場前總檢查清單",
+    checklist: [
+      "護照正本（效期 2029/05/24，確認隨身攜帶）",
+      "越南電子簽證 (e-Visa) 紙本印出或落地簽批文＋大頭照",
+      "台灣虎航 IT 551 線上報到（代號 EYSMUA，16:50 起飛）",
+      "下載 Grab App 並先在台灣綁定好海外回饋信用卡（免收驗證碼卡關）",
+      "準備美金（至當地換匯）或至少 300 萬～500 萬越南盾現金（西施按摩只收現金）",
+      "越南網卡 / eSIM 安裝確認",
+      "行動電源、充電線（切記行動電源不可放託運行李）",
+      "防水拖鞋／涼鞋、防潑水薄外套、輕便摺疊傘",
+      "預訂 Day 1 峴港機場➔會安接機 & Day 2 會安➔五行山➔峴港包車"
+    ],
+    stops: []
+  },
+  {
+    id: "d1",
+    tab: "Day 1",
+    sub: "11/19 (四) 會安",
+    date: "2026-11-19",
+    title: "Day 1｜抵達峴港 ➔ 直奔會安古鎮",
+    weather: {
+      temp: "24°C – 29°C",
+      rain: "98% (短暫陣雨)",
+      desc: "傍晚抵達峴港溫暖微涼，會安夜間可能有毛毛雨",
+      cloth: "👕 當日穿搭：短袖＋透氣長褲或短褲，隨身背包放薄外套（虎航機上冷）與摺疊傘。"
+    },
+    checklistTitle: "✅ Day 1 出發前＆落地檢查清單",
+    checklist: [
+      "14:20 前抵達桃園機場第一航廈辦理虎航 IT 551 報到",
+      "確認 Klook/KKday 接機司機聯絡方式與舉牌位置",
+      "落地峴港機場先換少量越南盾或準備好小額鈔票",
+      "進會安古鎮前隨身攜帶雨傘與房卡"
+    ],
+    stops: [
+      {
+        id: "d1s1",
+        icon: "✈️",
+        start: "16:50",
+        end: "19:00",
+        stayMins: 45,
+        name: "桃園機場起飛 ➔ 抵達峴港機場 (DAD)",
+        addr: "Da Nang International Airport (國際航廈 T2)",
+        q: "Da Nang International Airport",
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["虎航 IT 551", "訂位 EYSMUA", "18:25 落地"],
+        info: [
+          "16:50 桃園(TPE) 起飛 ➔ 18:25 抵達峴港國際航廈(T2)",
+          "入境審查＋領行李約需 35–45 分鐘，出關約 19:00"
+        ],
+        nextLeg: {
+          mode: "car",
+          modeTxt: "🚐 Klook 接機 / GrabCar",
+          travelMins: 45,
+          estCost: 320000,
+          desc: "出國際航廈大廳找舉牌司機，或至 Grab 乘車點叫車直達會安飯店（約 28 公里）。",
+          transitNote: "🚌 大眾運輸備案：Hoi An Express / Barri Ann 機場接駁巴士每 60 分鐘一班（19:00、20:00 發車，票價 150,000 ₫），但單人直接搭預約接機最省時。"
+        }
+      },
+      {
+        id: "d1s2",
+        icon: "🏨",
+        start: "19:45",
+        end: "20:15",
+        stayMins: 30,
+        name: "入住 M Village Resort Riverbeach Hoi An",
+        addr: "Cẩm An, Hội An, Quảng Nam, Việt Nam",
+        q: "M Village Resort Riverbeach Hoi An",
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["Agoda 已付", "編號 1796020565"],
+        info: [
+          "辦理 Check-in 放行李，稍作梳洗後搭 Grab 進會安市區吃烤肉"
+        ],
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar / 🛵 GrabBike",
+          travelMins: 12,
+          estCost: 70000,
+          bikeCost: 30000,
+          desc: "從飯店叫 Grab 前往會安超人氣烤肉店（汽車約 70,000 ₫ / 單人騎 GrabBike 僅約 30,000 ₫）。"
+        }
+      },
+      {
+        id: "d1s3",
+        icon: "🥩",
+        start: "20:30",
+        end: "21:30",
+        stayMins: 60,
+        name: "晚餐：Thịt Nướng Cô Lợi Hội An（會安烤肉）",
+        addr: "20A Lý Thái Tổ, Hội An, Đà Nẵng 560000",
+        q: "Thịt Nướng Cô Lợi Hội An 20A Lý Thái Tổ",
+        estCost: 150000,
+        costCat: "🍽️ 餐飲",
+        tags: ["清單必吃", "炭火豬肉串", "米紙捲生菜"],
+        info: [
+          "在地人激推的炭烤肉串＋烤肉捲米紙配花生醬，一人約 12–15 萬盾就能吃超飽！"
+        ],
+        nextLeg: {
+          mode: "walk",
+          modeTxt: "🚶 散步前往 / 🛵 GrabBike",
+          travelMins: 12,
+          estCost: 0,
+          bikeCost: 25000,
+          desc: "吃飽沿街往南散步約 10–12 分鐘即可進入會安古鎮燈籠區（若下雨可叫 GrabBike 約 25,000 ₫）。"
+        }
+      },
+      {
+        id: "d1s4",
+        icon: "🏮",
+        start: "21:45",
+        end: "23:00",
+        stayMins: 75,
+        name: "夜遊會安古鎮 (Hoi An Ancient Town) ➔ 回飯店",
+        addr: "Phố cổ Hội An, Minh An, Hội An",
+        q: "Hoi An Ancient Town",
+        estCost: 170000,
+        costCat: "🚗 交通",
+        tags: ["日本橋", "秋盆河燈籠夜景", "回程 Grab 7萬盾"],
+        info: [
+          "欣賞秋盆河兩岸燈籠夜景，逛完直接叫 GrabCar 回 M Village 飯店休息（車資約 70,000 ₫）"
+        ],
+        nextLeg: null
+      }
+    ]
+  },
+  {
+    id: "d2",
+    tab: "Day 2",
+    sub: "11/20 (五) 五行山/西施",
+    date: "2026-11-20",
+    title: "Day 2｜五行山 ➔ 漢江西岸 ➔ 西施按摩 ➔ 海鮮",
+    weather: {
+      temp: "23°C – 27°C",
+      rain: "100% (陣雨/雷陣雨)",
+      desc: "全天有陣雨機率，山區石階較濕滑",
+      cloth: "👕 當日穿搭：過膝短褲或薄長褲（進五行山佛寺禮儀）＋防滑好走的鞋或涼鞋＋隨身雨傘。"
+    },
+    checklistTitle: "✅ Day 2 前一晚＆退房前檢查清單",
+    checklist: [
+      "會安飯店退房檢查：護照、手機充電器、行動電源",
+      "確認包車司機接送時間（會安 ➔ 中停五行山 1.5hr ➔ 峴港山姆飯店）",
+      "重要！皮包放足至少 150 萬越南盾現金（下午 Massage Tây Thi 門票+小費需付現）",
+      "穿過膝褲子與好走的鞋子（五行山洞穴階梯微濕滑）"
+    ],
+    stops: [
+      {
+        id: "d2s1",
+        icon: "⛰️",
+        start: "09:30",
+        end: "11:30",
+        stayMins: 90,
+        name: "會安退房北上 ➔ 五行山 (Ngũ Hành Sơn)",
+        addr: "81 Huyền Trân Công Chúa, Hòa Hải, Ngũ Hành Sơn, Đà Nẵng",
+        q: "Marble Mountains Da Nang",
+        estCost: 610000,
+        costCat: "🚗 交通",
+        tags: ["順路必停", "電梯上山", "玄空洞佛光"],
+        info: [
+          "位於會安往峴港正中間！包車約 500,000 ₫（行李直接放司機車上最輕鬆）",
+          "水山門票 40,000 ₫ ＋ 單程電梯 15,000 ₫（來回含門票約 110,000 ₫），必看最大洞穴「玄空洞」"
+        ],
+        nextLeg: {
+          mode: "car",
+          modeTxt: "🚐 原包車續行 / 🚗 GrabCar",
+          travelMins: 15,
+          estCost: 0,
+          desc: "搭原包車繼續往北 15 分鐘直達山姆飯店（費用已含在包車內；若單獨叫 GrabCar 約 100,000 ₫）。",
+          transitNote: "🚌 大眾運輸參考：峴港 2 號公車每 20 分鐘一班（票價 15,000 ₫），有大件行李建議搭車。"
+        }
+      },
+      {
+        id: "d2s2",
+        icon: "🏨",
+        start: "11:45",
+        end: "12:15",
+        stayMins: 30,
+        name: "峴港山姆飯店和公寓 (Sam Hotel) 放行李",
+        addr: "Sam Hotel and Apartment Da Nang",
+        q: "Sam Hotel and Apartment Da Nang",
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["Trip.com 已付", "編號 1616334979812577"],
+        info: [
+          "先寄放行李或辦理入住，輕裝前往漢江西岸吃午餐"
+        ],
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar / 🛵 GrabBike",
+          travelMins: 10,
+          estCost: 60000,
+          bikeCost: 25000,
+          desc: "過橋前往漢江西岸 Bếp Lụa 餐廳（GrabCar 約 60,000 ₫ / GrabBike 約 25,000 ₫）。"
+        }
+      },
+      {
+        id: "d2s3",
+        icon: "🍲",
+        start: "12:30",
+        end: "13:45",
+        stayMins: 75,
+        name: "午餐：Bếp Lụa 越式餐廳",
+        addr: "94 Bạch Đằng, Hải Châu, Đà Nẵng 550000",
+        q: "Bếp Lụa 94 Bạch Đằng Đà Nẵng",
+        estCost: 250000,
+        costCat: "🍽️ 餐飲",
+        tags: ["漢江河景", "有冷氣", "道地越菜"],
+        info: [
+          "環境舒適有冷氣的越式家常菜與春捲，一人用餐約 20–25 萬盾"
+        ],
+        nextLeg: {
+          mode: "walk",
+          modeTxt: "🚶 步行前往",
+          travelMins: 4,
+          estCost: 0,
+          desc: "沿漢江 Bạch Đằng 街往南散步 4 分鐘即達漢市場與粉紅大教堂。"
+        }
+      },
+      {
+        id: "d2s4",
+        icon: "⛪",
+        start: "13:50",
+        end: "15:00",
+        stayMins: 70,
+        name: "漢市場 (Chợ Hàn) ＆ 峴港粉紅大教堂",
+        addr: "156 Trần Phú, Hải Châu 1, Hải Châu, Đà Nẵng",
+        q: "Da Nang Cathedral 156 Tran Phu",
+        estCost: 200000,
+        costCat: "🛍️ 購物",
+        tags: ["免費景點", "換匯划算", "買腰果芒果乾"],
+        info: [
+          "漢市場一樓買腰果、咖啡、果乾（記得殺價），旁邊銀樓換越南盾匯率極佳；拍完粉紅大教堂走去喝咖啡"
+        ],
+        nextLeg: {
+          mode: "walk",
+          modeTxt: "🚶 步行前往",
+          travelMins: 5,
+          estCost: 0,
+          desc: "從粉紅大教堂轉進 Phạm Hồng Thái 街，步行約 5 分鐘即達 Trình cà phê。"
+        }
+      },
+      {
+        id: "d2s5",
+        icon: "☕",
+        start: "15:05",
+        end: "16:15",
+        stayMins: 70,
+        name: "下午茶：Trình cà phê（招牌酪梨咖啡）",
+        addr: "25 Phạm Hồng Thái, Hải Châu, Đà Nẵng 55000",
+        q: "Trình cà phê 25 Phạm Hồng Thái Đà Nẵng",
+        estCost: 65000,
+        costCat: "🍽️ 餐飲",
+        tags: ["清單精選", "綠意庭園", "必點酪梨咖啡"],
+        info: [
+          "在地超人氣庭園咖啡廳，必點 Cà Phê Bơ（酪梨冰沙咖啡，約 55,000–65,000 ₫）"
+        ],
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar / 🛵 GrabBike",
+          travelMins: 20,
+          estCost: 130000,
+          bikeCost: 50000,
+          desc: "從市區往西北蓮沼區前往必去的西施按摩（約 9 公里，GrabCar 約 130,000 ₫ / GrabBike 約 50,000 ₫）。",
+          transitNote: "🚌 大眾運輸參考：市區公車 R16 線每 25 分鐘一班，但需步行轉乘約 45 分鐘，強烈建議直接叫 Grab。"
+        }
+      },
+      {
+        id: "d2s6",
+        icon: "🔥",
+        start: "16:35",
+        end: "18:35",
+        stayMins: 120,
+        name: "必去：Massage Tây Thi (西施) 或 Hải Vân",
+        addr: "32-34 Hồ Tùng Mậu, Hòa Khánh, Đà Nẵng 550000",
+        q: "Massage Tây Thi 32 34 Hồ Tùng Mậu Đà Nẵng",
+        estCost: 1200000,
+        costCat: "💆 按摩",
+        tags: ["指定必去", "兩間相距60公尺", "需付現金"],
+        info: [
+          "首推 Massage Tây Thi（32-34 Hồ Tùng Mậu），若人多可直接走去隔壁 60 公尺的 Massage Hải Vân（64 Hồ Tùng Mậu）",
+          "包廂門票＋小費合計約 100 萬～150 萬盾，現場直接進場免預約"
+        ],
+        warn: "務必準備足夠越南盾現金支付門票與小費！",
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar / 🛵 GrabBike",
+          travelMins: 22,
+          estCost: 150000,
+          bikeCost: 60000,
+          desc: "沿峴港海灣大橋往東岸美溪沙灘方向，直達 Bé Ni 2 海鮮大排檔（GrabCar 約 150,000 ₫）。"
+        }
+      },
+      {
+        id: "d2s7",
+        icon: "🦞",
+        start: "19:00",
+        end: "20:45",
+        stayMins: 105,
+        name: "晚餐：Bé Ni 2 海景海鮮大排檔",
+        addr: "228 Võ Nguyên Giáp, An Hải, Đà Nẵng 550000",
+        q: "Hải sản Bé Ni 2 228 Võ Nguyên Giáp Đà Nẵng",
+        estCost: 550000,
+        costCat: "🍽️ 餐飲",
+        tags: ["美溪海景第一排", "現撈活海鮮", "價格透明"],
+        info: [
+          "在水族箱直接挑選海鮮秤重並選料理方式（必點蒜蓉大蝦、烤扇貝、炒空心菜），吃完搭 Grab 回山姆飯店（約 45,000 ₫）"
+        ],
+        nextLeg: null
+      }
+    ]
+  },
+  {
+    id: "d3",
+    tab: "Day 3",
+    sub: "11/21 (六) 美溪/龍橋",
+    date: "2026-11-21",
+    title: "Day 3｜美溪慢活 ➔ 越式洗頭 ➔ 靈應寺 ➔ 龍橋噴火",
+    weather: {
+      temp: "24°C – 26°C",
+      rain: "100% (陣雨)",
+      desc: "週六涼爽有陣雨，晚上 21:00 龍橋有週末噴火秀",
+      cloth: "👕 當日穿搭：短袖＋過膝褲（下午去靈應寺禮佛需過膝），晚上看龍橋噴水秀記得帶傘或站橋側避免淋濕。"
+    },
+    checklistTitle: "✅ Day 3 退房與出發前檢查清單",
+    checklist: [
+      "山姆飯店退房檢查：護照、房卡歸還、充電頭",
+      "確認 Ngọc Linh Spa 越式洗頭時段（就在新飯店走路 3 分鐘處）",
+      "若晚餐決定吃 Le Comptoir 法式餐廳，確認已完成訂位",
+      "設定 20:30 鬧鐘提醒前往龍橋卡位看 21:00 週六限定噴火秀"
+    ],
+    stops: [
+      {
+        id: "d3s1",
+        icon: "🏨",
+        start: "11:00",
+        end: "11:45",
+        stayMins: 45,
+        name: "換住美溪區：Nexus House An Thượng",
+        addr: "Nexus House An Thượng - Boutique Hotel Near My Khe Beach",
+        q: "Nexus House An Thuong Da Nang",
+        estCost: 45000,
+        costCat: "🚗 交通",
+        tags: ["Agoda 已付", "編號 1798543709", "美溪商圈核心"],
+        info: [
+          "從山姆飯店搭 GrabCar 過來僅約 45,000 ₫，先寄放行李後直接步行逛 An Thượng 外國人街區"
+        ],
+        nextLeg: {
+          mode: "walk",
+          modeTxt: "🚶 步行前往",
+          travelMins: 3,
+          estCost: 0,
+          desc: "出飯店步行 3 分鐘（約 220 公尺）即達 Banh Mi Phuong。"
+        }
+      },
+      {
+        id: "d3s2",
+        icon: "🥖",
+        start: "12:00",
+        end: "13:00",
+        stayMins: 60,
+        name: "午餐：Banh Mi Phuong 越式法國麵包",
+        addr: "49 Trần Bạch Đằng, Ngũ Hành Sơn, Đà Nẵng 550000",
+        q: "Banh Mi Phuong 49 Trần Bạch Đằng Đà Nẵng",
+        estCost: 65000,
+        costCat: "🍽️ 餐飲",
+        tags: ["酥脆法棍", "綜合烤肉口味"],
+        info: [
+          "外皮超酥脆的招牌越式法國麵包，配一杯越式冰咖啡約 65,000 ₫"
+        ],
+        nextLeg: {
+          mode: "walk",
+          modeTxt: "🚶 步行前往",
+          travelMins: 3,
+          estCost: 0,
+          desc: "從 49 Trần Bạch Đằng 轉入 Phan Tôn 街，步行 3 分鐘（約 250 公尺）即達 Ngọc Linh Spa。"
+        }
+      },
+      {
+        id: "d3s3",
+        icon: "💆",
+        start: "13:10",
+        end: "15:10",
+        stayMins: 120,
+        name: "放鬆：Ngọc Linh Spa 越式洗頭＆按摩",
+        addr: "04 Phan Tôn, Ngũ Hành Sơn, Đà Nẵng 550000",
+        q: "Ngọc Linh Spa 04 Phan Tôn Đà Nẵng",
+        estCost: 400000,
+        costCat: "💆 按摩",
+        tags: ["清單收藏兩次", "越式洗頭", "草本肩頸放鬆"],
+        info: [
+          "您在清單裡特別存了兩次的店家！享受正宗越式洗頭、敷臉、掏耳與肩頸按摩"
+        ],
+        bookUrl: "https://www.google.com/maps/search/?api=1&query=Ngoc+Linh+Spa+04+Phan+Ton+Da+Nang",
+        bookTxt: "📍 開啟地圖頁面預約",
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar（建議請司機等候）",
+          travelMins: 15,
+          estCost: 250000,
+          desc: "沿美溪海岸線往北上山茶半島靈應寺（單程約 100,000 ₫；因山上有時較難叫車，建議跟司機談加 50,000 ₫ 在停車場等 45 分鐘載你下山，來回共約 250,000 ₫）。"
+        }
+      },
+      {
+        id: "d3s4",
+        icon: "🗽",
+        start: "15:30",
+        end: "17:00",
+        stayMins: 90,
+        name: "山茶半島・靈應寺 (Chùa Linh Ứng) 大觀音像",
+        addr: "Vườn Lâm Tỳ Ni, Hoàng Sa, Thọ Quang, Sơn Trà, Đà Nẵng",
+        q: "Linh Ung Pagoda Son Tra Da Nang",
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["免門票", "67公尺海上觀音", "俯瞰峴港海灣"],
+        info: [
+          "越南最高 67 公尺白玉觀音像，俯瞰整個美溪沙灘月牙海灣，注意野生猴子勿餵食"
+        ],
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 原車或 GrabCar 下山",
+          travelMins: 15,
+          estCost: 0,
+          desc: "搭原車返回美溪沙灘區吃晚餐（車資已計入上一段來回 250,000 ₫）。"
+        }
+      },
+      {
+        id: "d3s5",
+        icon: "🍗",
+        start: "17:30",
+        end: "19:45",
+        stayMins: 120,
+        name: "晚餐：Chân Gà Nướng Hai Còi 烤雞腳（或 Le Comptoir 法餐）",
+        addr: "91 Nguyễn Văn Thoại, An Hải, Đà Nẵng 550000",
+        q: "Chân Gà Nướng Hai Còi 91 Nguyễn Văn Thoại Đà Nẵng",
+        estCost: 250000,
+        costCat: "🍽️ 餐飲",
+        tags: ["在地炭烤雞腳", "或選米其林級法餐 Le Comptoir"],
+        info: [
+          "方案 A（接地氣）：Chân Gà Nướng Hai Còi 蜜汁炭烤雞腳＋烤雞翅配啤酒（約 250,000 ₫）",
+          "方案 B（精緻大餐）：Le Comptoir 法式餐廳（16 Chế Lan Viên，套餐約 1,500,000 ₫，需提前訂位）"
+        ],
+        bookUrl: "https://www.facebook.com/lecomptoirdanang/",
+        bookTxt: "🍷 Le Comptoir FB 訂位",
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar / 🛵 GrabBike",
+          travelMins: 7,
+          estCost: 50000,
+          bikeCost: 25000,
+          desc: "前往龍橋橋頭看 21:00 噴火秀（GrabCar 約 50,000 ₫ / GrabBike 約 25,000 ₫）。",
+          transitNote: "🕘 固定演出時刻：龍橋噴火噴水秀僅在週六、週日 21:00 準時演出（20:45 開始封橋管制車輛，請在 20:40 前抵達龍頭處）。"
+        }
+      },
+      {
+        id: "d3s6",
+        icon: "🐉",
+        start: "20:35",
+        end: "21:30",
+        stayMins: 55,
+        name: "週六限定：龍橋 (Cầu Rồng) 21:00 噴火噴水秀",
+        addr: "Cầu Rồng, Hải Châu, Đà Nẵng",
+        q: "Dragon Bridge Da Nang",
+        estCost: 50000,
+        costCat: "🚗 交通",
+        tags: ["週六日 21:00 限定", "免費觀賞", "回程 Grab 5萬盾"],
+        info: [
+          "21:00 準時先噴火 9 次、接著噴水 3 次！站在龍頭兩側河岸拍最清楚又不會被噴濕，看完叫 Grab 回 Nexus House"
+        ],
+        nextLeg: null
+      }
+    ]
+  },
+  {
+    id: "d4",
+    tab: "Day 4",
+    sub: "11/22 (日) 飛胡志明",
+    date: "2026-11-22",
+    title: "Day 4｜美溪沙灘 ➔ 順路咖啡 ➔ 18:15 飛胡志明",
+    weather: {
+      temp: "23°C – 27°C",
+      rain: "93% (局部陣雨)",
+      desc: "峴港舒適微涼；傍晚抵達胡志明市高達 32°C",
+      cloth: "👕 當日穿搭：直接穿短袖夏裝搭機（晚上到胡志明市是盛夏 30°C+），薄外套收進隨身包。"
+    },
+    checklistTitle: "✅ Day 4 退房＆前往機場前檢查清單",
+    checklist: [
+      "12:00 前辦理 Nexus House 退房，檢查保險箱、床頭充電線、護照",
+      "行動電源、打火機（勿帶）確認放在隨身背包，不可託運",
+      "確認越捷航空訂單（編號 1798569648，18:15 起飛往胡志明 SGN）",
+      "16:15 前抵達峴港機場「國內航廈 T1」（注意不是國際航廈 T2！）"
+    ],
+    stops: [
+      {
+        id: "d4s1",
+        icon: "🏖️",
+        start: "10:00",
+        end: "12:00",
+        stayMins: 120,
+        name: "美溪沙灘散步 ＆ 12:00 Nexus House 退房",
+        addr: "My Khe Beach, Da Nang",
+        q: "My Khe Beach Da Nang",
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["世界六大美麗海灘", "悠閒退房"],
+        info: [
+          "早上到飯店旁的美溪沙灘散步聽海浪，12:00 退房後帶著行李過橋去喝咖啡吹冷氣"
+        ],
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar",
+          travelMins: 10,
+          estCost: 55000,
+          desc: "過龍橋直走機場大道 (Nguyễn Văn Linh)，順路停 P Coffee 休息（GrabCar 約 55,000 ₫）。"
+        }
+      },
+      {
+        id: "d4s2",
+        icon: "☕",
+        start: "12:30",
+        end: "15:50",
+        stayMins: 180,
+        name: "順路咖啡廳：P Coffee（或 Tân Coffee）",
+        addr: "53-55 Nguyễn Văn Linh, Hải Châu, Đà Nẵng 50211",
+        q: "P Coffee 53-55 Nguyễn Văn Linh Đà Nẵng",
+        estCost: 150000,
+        costCat: "🍽️ 餐飲",
+        tags: ["機場大道上", "空間寬敞有插座", "離機場8分鐘"],
+        info: [
+          "P Coffee 就在往機場的同一條大馬路上（也可去附近 5 分鐘的 Tân Coffee：10 Bình Hiên），吹冷氣充飽手機電量再出發去機場"
+        ],
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar 直達國內航廈",
+          travelMins: 8,
+          estCost: 55000,
+          desc: "沿 Nguyễn Văn Linh 大道直開 8 分鐘即達峴港機場國內航廈 T1（GrabCar 約 55,000 ₫）。",
+          transitNote: "🚌 大眾運輸參考：12 號公車每 30 分鐘一班經 Nguyễn Văn Linh 往機場，但帶行李直接叫 GrabCar 只要台幣 70 元且直達航廈門口。"
+        }
+      },
+      {
+        id: "d4s3",
+        icon: "✈️",
+        start: "16:10",
+        end: "18:15",
+        stayMins: 125,
+        name: "抵達峴港機場 (DAD) ➔ 18:15 越捷飛胡志明 (SGN)",
+        addr: "Da Nang International Airport - Domestic Terminal (T1)",
+        q: "Da Nang Airport Domestic Terminal",
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["越捷航空", "編號 1798569648", "19:40 抵胡志明"],
+        info: [
+          "請確認在「Ga Quốc Nội（國內航廈 T1）」下車報到！18:15 起飛，19:40 抵達胡志明市新山一機場"
+        ],
+        nextLeg: null
+      }
+    ]
+  }
+];
+
+// ==================== 狀態管理 (localStorage) ====================
+const STORE_KEY = "danang_app_v1";
+let state = JSON.parse(localStorage.getItem(STORE_KEY) || "null") || {
+  activeDay: "d1",
+  currentStopId: "d1s1",
+  doneStops: [],
+  checkedItems: {},
+  totalBudgetVnd: 5000000,
+  ratePer10k: 13, // 10,000 VND = 13 TWD
+  customStayOffset: 0, // 微調目前站點停留分鐘
+  expenses: []
+};
+
+function saveState() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+}
+
+// ==================== 金額與時間工具 ====================
+function fmtVnd(v) {
+  return Math.round(v).toLocaleString("en-US") + " ₫";
+}
+function vndToTwd(v) {
+  return Math.round((v / 10000) * state.ratePer10k);
+}
+function fmtBoth(v) {
+  if (!v) return "免費 / 已付";
+  return `${fmtVnd(v)} (≈ NT$${vndToTwd(v).toLocaleString("en-US")})`;
+}
+function addMinutesToDate(dateObj, mins) {
+  return new Date(dateObj.getTime() + mins * 60000);
+}
+function fmtHHMM(dateObj) {
+  return dateObj.toTimeString().slice(0, 5);
+}
+function showToast(msg) {
+  const t = document.getElementById("toastMsg");
+  t.textContent = msg;
+  t.style.display = "block";
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => { t.style.display = "none"; }, 2200);
+}
+function copyText(txt) {
+  navigator.clipboard?.writeText(txt);
+  showToast("📋 已複製地址：" + txt);
+}
+
+// ==================== 計算某站點與後續站點的動態預計抵達時間 ====================
+function findStopContext(stopId) {
+  for (const d of DAYS) {
+    const idx = d.stops.findIndex(s => s.id === stopId);
+    if (idx >= 0) return { day: d, index: idx, stop: d.stops[idx] };
+  }
+  return null;
+}
+
+// 取得下一個大眾運輸班次時間（依手機現在時間推算）
+function getNextBusTime(now, intervalMins = 30) {
+  const m = now.getMinutes();
+  const nextM = Math.ceil((m + 1) / intervalMins) * intervalMins;
+  const d = new Date(now.getTime());
+  d.setSeconds(0);
+  if (nextM >= 60) {
+    d.setHours(d.getHours() + 1);
+    d.setMinutes(nextM - 60);
+  } else {
+    d.setMinutes(nextM);
+  }
+  return fmtHHMM(d);
+}
+
+// ==================== 渲染頂部預算與雷達 ====================
+function updateWalletHeader() {
+  const spentVnd = state.expenses.reduce((sum, e) => sum + e.vnd, 0);
+  const remainVnd = state.totalBudgetVnd - spentVnd;
+
+  document.getElementById("hdrBudget").textContent = fmtVnd(state.totalBudgetVnd);
+  document.getElementById("hdrBudgetTwd").textContent = `≈ NT$${vndToTwd(state.totalBudgetVnd).toLocaleString()}`;
+  document.getElementById("hdrSpent").textContent = fmtVnd(spentVnd);
+  document.getElementById("hdrSpentTwd").textContent = `≈ NT$${vndToTwd(spentVnd).toLocaleString()}`;
+
+  const remEl = document.getElementById("hdrRemain");
+  remEl.textContent = fmtVnd(remainVnd);
+  remEl.className = "wb-val wb-remain" + (remainVnd < 0 ? " over" : remainVnd < state.totalBudgetVnd * 0.2 ? " low" : "");
+  document.getElementById("hdrRemainTwd").textContent = `≈ NT$${vndToTwd(remainVnd).toLocaleString()}`;
+
+  // Wallet tab
+  document.getElementById("wTotalBig").textContent = fmtBoth(state.totalBudgetVnd);
+  document.getElementById("wSpentBig").textContent = fmtBoth(spentVnd);
+  document.getElementById("wRemainBig").textContent = fmtVnd(remainVnd);
+  document.getElementById("wRemainBig").style.color = remainVnd < 0 ? "#f87171" : "#4ade80";
+  document.getElementById("wRemainBigTwd").textContent = `約台幣 NT$${vndToTwd(remainVnd).toLocaleString()}（匯率：1萬盾 = NT$${state.ratePer10k}）`;
+}
+
+function renderRadar() {
+  const box = document.getElementById("radarBox");
+  const now = new Date();
+  const ctx = findStopContext(state.currentStopId);
+  if (!ctx) {
+    box.style.display = "none";
+    return;
+  }
+  box.style.display = "block";
+  const { day, index, stop } = ctx;
+  const nextStop = day.stops[index + 1] || null;
+  const leg = stop.nextLeg;
+  const stayMins = Math.max(0, (stop.stayMins || 60) + (state.customStayOffset || 0));
+
+  if (!nextStop || !leg) {
+    box.innerHTML = `
+      <div class="radar-top">
+        <span class="radar-badge">📍 目前所在計畫 (${day.tab})</span>
+        <small style="color:#94a3b8">📱 手機時間 ${fmtHHMM(now)}</small>
+      </div>
+      <div class="radar-now">${stop.icon} ${stop.name}</div>
+      <div style="font-size:0.8rem;color:#cbd5e1;margin-top:4px">🎉 這是 ${day.tab} 的最後一站！完成後可回飯店休息或切換至下一天行程。</div>
+    `;
+    return;
+  }
+
+  const etaLeaveNow = addMinutesToDate(now, leg.travelMins);
+  const etaAfterStay = addMinutesToDate(now, stayMins + leg.travelMins);
+  const grabLink = "https://grab.onelink.me/2695613898?pid=inappsharing";
+  const gmapsDir = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(stop.q)}&destination=${encodeURIComponent(nextStop.q)}&travelmode=driving`;
+
+  box.innerHTML = `
+    <div class="radar-top">
+      <span class="radar-badge">📍 目前所在站點 (${day.tab})</span>
+      <small style="color:#cbd5e1">📱 依手機時間 <b>${fmtHHMM(now)}</b> 即時推算</small>
+    </div>
+    <div class="radar-now">${stop.icon} ${stop.name}</div>
+    <div class="radar-next-box">
+      <div style="font-size:0.74rem;color:#94a3b8">⏭️ 下一站目標（${leg.modeTxt}・車程約 ${leg.travelMins} 分鐘）</div>
+      <div style="font-size:0.96rem;font-weight:800;margin:2px 0;color:#fff">${nextStop.icon} ${nextStop.name}</div>
+      <div style="font-size:0.76rem;color:#fbbf24;font-weight:700">💰 前往下一站預計開銷：${fmtBoth(leg.estCost)}${leg.bikeCost ? `（GrabBike 約 ${fmtVnd(leg.bikeCost)}）` : ""}</div>
+      <div class="radar-eta-grid">
+        <div class="eta-pill">
+          <small>🚀 若現在立刻出發</small>
+          <b>預計 ${fmtHHMM(etaLeaveNow)} 抵達</b>
+        </div>
+        <div class="eta-pill stay">
+          <small>⏳ 若停留 ${stayMins} 分鐘後出發</small>
+          <b>預計 ${fmtHHMM(etaAfterStay)} 抵達</b>
+        </div>
+      </div>
+      <div class="stay-adjust">
+        <span>調整本站停留時間：</span>
+        <button onclick="adjustStay(-15)">-15分</button>
+        <button onclick="adjustStay(15)">+15分</button>
+        <button onclick="adjustStay(0, true)">重設(${stop.stayMins}分)</button>
+      </div>
+      <div class="leg-actions" style="margin-top:9px">
+        <a class="leg-btn grab" target="_blank" href="${grabLink}">🚗 開啟 Grab 叫車</a>
+        <button class="leg-btn" onclick="copyText('${nextStop.addr.replace(/'/g, "")}')">📋 複製下站地址</button>
+        <a class="leg-btn" target="_blank" href="${gmapsDir}">🗺️ Google 導航</a>
+        <button class="leg-btn" onclick="advanceToStop('${nextStop.id}')" style="background:#38bdf8;color:#0f172a;border-color:#38bdf8">⏭️ 我已抵達下一站</button>
+      </div>
+    </div>
+  `;
+}
+
+window.adjustStay = function(delta, reset = false) {
+  state.customStayOffset = reset ? 0 : (state.customStayOffset || 0) + delta;
+  saveState();
+  renderRadar();
+  renderCurrentDay();
+};
+
+window.advanceToStop = function(nextId) {
+  if (state.currentStopId && !state.doneStops.includes(state.currentStopId)) {
+    state.doneStops.push(state.currentStopId);
+  }
+  state.currentStopId = nextId;
+  state.customStayOffset = 0;
+  saveState();
+  renderRadar();
+  renderCurrentDay();
+  showToast("📍 已更新目前位置！");
+};
+
+// ==================== 渲染日期 Tabs 與當日內容 ====================
+function renderDayTabs() {
+  const box = document.getElementById("dayTabs");
+  box.innerHTML = DAYS.map(d => `
+    <button class="day-tab ${state.activeDay === d.id ? "active" : ""}" onclick="selectDay('${d.id}')">
+      ${d.tab}
+      <small>${d.sub}</small>
+    </button>
+  `).join("");
+}
+
+window.selectDay = function(dayId) {
+  state.activeDay = dayId;
+  const dayObj = DAYS.find(d => d.id === dayId);
+  if (dayObj && dayObj.stops.length > 0) {
+    // 若目前選中的站點不在這天，可保留但讓使用者一鍵切換
+  }
+  saveState();
+  renderDayTabs();
+  renderCurrentDay();
+  renderMapView();
+};
+
+function renderCurrentDay() {
+  const day = DAYS.find(d => d.id === state.activeDay) || DAYS[1];
+  const now = new Date();
+
+  // 1. Weather Box
+  const w = day.weather;
+  document.getElementById("weatherBox").innerHTML = `
+    <div class="weather-card">
+      <div class="w-row">
+        <div>
+          <div style="font-size:0.74rem;font-weight:700;color:#0284c7">🌤️ ${day.sub} 當日天氣與穿搭建議</div>
+          <div style="font-size:0.84rem;font-weight:700;margin-top:2px">${w.desc}（降雨機率 ${w.rain}）</div>
+        </div>
+        <div class="w-temp">${w.temp}</div>
+      </div>
+      <div class="w-cloth">${w.cloth}</div>
+    </div>
+  `;
+
+  // 2. Checklist Box
+  const chkList = day.checklist || [];
+  const doneCount = chkList.filter((_, idx) => state.checkedItems[`${day.id}_${idx}`]).length;
+  document.getElementById("checklistBox").innerHTML = `
+    <div class="card">
+      <div class="sec-title">
+        <span>${day.checklistTitle}</span>
+        <span class="tag">${doneCount} / ${chkList.length} 完成</span>
+      </div>
+      <div>
+        ${chkList.map((item, idx) => {
+          const key = `${day.id}_${idx}`;
+          const checked = !!state.checkedItems[key];
+          return `
+            <label class="chk-item ${checked ? "checked" : ""}">
+              <input type="checkbox" ${checked ? "checked" : ""} onchange="toggleCheck('${key}')">
+              <span>${item}</span>
+            </label>
+          `;
+        }).join("")}
+      </div>
+    </div>
+  `;
+
+  // 3. Day Estimated Cost vs Actual Cost
+  if (day.stops.length === 0) {
+    document.getElementById("dayBudgetBox").innerHTML = `
+      <div class="card" style="text-align:center;padding:18px">
+        <div style="font-size:1.02rem;font-weight:800;margin-bottom:6px">✈️ 準備出發前往峴港！</div>
+        <div style="font-size:0.82rem;color:var(--muted);margin-bottom:12px">完成上方檢查清單後，點擊下方按鈕切換至 Day 1 開始行程導航。</div>
+        <button class="btn-link" onclick="selectDay('d1')">👉 前往 Day 1 (11/19) 行程</button>
+      </div>
+    `;
+    document.getElementById("stopsContainer").innerHTML = "";
+    return;
+  }
+
+  const estStopsCost = day.stops.reduce((s, x) => s + (x.estCost || 0), 0);
+  const estLegsCost = day.stops.reduce((s, x) => s + (x.nextLeg?.estCost || 0), 0);
+  const totalDayEst = estStopsCost + estLegsCost;
+  const actualDaySpent = state.expenses.filter(e => e.day === day.id).reduce((s, e) => s + e.vnd, 0);
+
+  document.getElementById("dayBudgetBox").innerHTML = `
+    <div class="card" style="background:#f8fafc">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <div style="font-size:0.74rem;color:var(--muted)">📊 ${day.tab} 當日預計總花費（含行程+交通）</div>
+          <div style="font-size:0.96rem;font-weight:800;color:var(--ink)">${fmtBoth(totalDayEst)}</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:0.74rem;color:var(--muted)">當日已記帳開銷</div>
+          <div style="font-size:0.96rem;font-weight:800;color:var(--primary)">${fmtVnd(actualDaySpent)}</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // 4. Calculate cascading live ETAs if currentStopId is on this day
+  const curIdx = day.stops.findIndex(s => s.id === state.currentStopId);
+  const etaMap = {};
+  if (curIdx >= 0) {
+    let runningTime = new Date(now.getTime());
+    const curStop = day.stops[curIdx];
+    const firstStay = Math.max(0, (curStop.stayMins || 60) + (state.customStayOffset || 0));
+    runningTime = addMinutesToDate(runningTime, firstStay);
+    for (let i = curIdx; i < day.stops.length - 1; i++) {
+      const leg = day.stops[i].nextLeg;
+      if (leg) {
+        runningTime = addMinutesToDate(runningTime, leg.travelMins);
+        etaMap[day.stops[i + 1].id] = fmtHHMM(runningTime);
+        runningTime = addMinutesToDate(runningTime, day.stops[i + 1].stayMins || 60);
+      }
+    }
+  }
+
+  // 5. Render Stops & Transport Legs
+  const container = document.getElementById("stopsContainer");
+  container.innerHTML = day.stops.map((s, idx) => {
+    const isCur = state.currentStopId === s.id;
+    const isDone = state.doneStops.includes(s.id);
+    const liveEta = etaMap[s.id];
+    const leg = s.nextLeg;
+    const nextStop = day.stops[idx + 1];
+
+    const stopHtml = `
+      <div class="stop-card ${isCur ? "is-current open" : ""} ${isDone ? "is-done" : ""}" id="card_${s.id}">
+        <div class="stop-head" onclick="toggleStopOpen('${s.id}')">
+          <div class="stop-icon">${s.icon}</div>
+          <div class="stop-main">
+            <div class="stop-time-row">
+              <span class="stop-time">表定 ${s.start}–${s.end}</span>
+              ${isCur ? `<span class="eta-live-tag" style="background:#ffedd5;color:#c2410c">📍 目前在這站（${fmtHHMM(now)}）</span>` : ""}
+              ${liveEta ? `<span class="eta-live-tag">🕒 預計 ${liveEta} 抵達</span>` : ""}
+            </div>
+            <div class="stop-title">${s.name}</div>
+            <div class="stop-addr">📍 ${s.addr}</div>
+            <div class="stop-cost-badge">💰 本站預計花費：${fmtBoth(s.estCost)}</div>
+          </div>
+        </div>
+
+        <div class="stop-actions">
+          <button class="act-btn here-btn ${isCur ? "active" : ""}" onclick="setAsCurrentStop('${s.id}')">
+            ${isCur ? "📍 目前所在站" : "📍 我到這站了"}
+          </button>
+          <button class="act-btn done-btn ${isDone ? "active" : ""}" onclick="toggleStopDone('${s.id}')">
+            ${isDone ? "✅ 已完成" : "⭕ 標記完成"}
+          </button>
+          <button class="act-btn exp-btn" onclick="quickRecordExpense('${day.id}', '${s.name.replace(/'/g, "")}', ${s.estCost || 100000}, '${s.costCat || "🍽️ 餐飲"}')">
+            ➕ 記這筆花費
+          </button>
+        </div>
+
+        <div class="stop-detail">
+          <div class="tag-list">${(s.tags || []).map(t => `<span class="tag">${t}</span>`).join("")}</div>
+          <ul style="padding-left:18px;color:#334155">
+            ${(s.info || []).map(line => `<li>${line}</li>`).join("")}
+          </ul>
+          ${s.warn ? `<div class="warn-box">⚠️ ${s.warn}</div>` : ""}
+          <div class="link-btns">
+            <a class="btn-link" target="_blank" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(s.q)}">📍 Google 地圖</a>
+            <button class="btn-link secondary" onclick="copyText('${s.addr.replace(/'/g, "")}')">📋 複製越文地址</button>
+            ${s.bookUrl ? `<a class="btn-link book" target="_blank" href="${s.bookUrl}">${s.bookTxt}</a>` : ""}
+          </div>
+        </div>
+      </div>
+    `;
+
+    if (!leg || !nextStop) return stopHtml;
+
+    const leaveNowEta = fmtHHMM(addMinutesToDate(now, leg.travelMins));
+    const gmapsDir = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(s.q)}&destination=${encodeURIComponent(nextStop.q)}&travelmode=driving`;
+    const nextBusStr = leg.transitNote ? `<div class="leg-transit-time">${leg.transitNote}（依目前手機時間，下一班約 <b>${getNextBusTime(now, 30)}</b> 發車）</div>` : "";
+
+    const legHtml = `
+      <div class="leg-card ${isCur ? "highlight-leg" : ""}">
+        <div class="leg-head">
+          <span>⬇️ 前往下一站：<b>${nextStop.name}</b></span>
+          <span class="badge-mode m-${leg.mode}">${leg.modeTxt}</span>
+        </div>
+        <div class="leg-desc">
+          ⏱️ 車程約 <b>${leg.travelMins} 分鐘</b>（若現在出發預計 <b>${leaveNowEta}</b> 抵達）<br>
+          💰 預計交通開銷：<b>${fmtBoth(leg.estCost)}</b>${leg.bikeCost ? `｜🛵 GrabBike 約 <b>${fmtBoth(leg.bikeCost)}</b>` : ""}
+          <div style="margin-top:3px;color:#475569">${leg.desc}</div>
+        </div>
+        ${nextBusStr}
+        <div class="leg-actions">
+          ${leg.mode === "grab" || leg.mode === "car" ? `<a class="leg-btn grab" target="_blank" href="https://grab.onelink.me/2695613898?pid=inappsharing">🚗 開啟 Grab</a>` : ""}
+          <button class="leg-btn" onclick="copyText('${nextStop.addr.replace(/'/g, "")}')">📋 複製下站地址</button>
+          <a class="leg-btn" target="_blank" href="${gmapsDir}">🗺️ 路線導航</a>
+          ${leg.estCost > 0 ? `<button class="leg-btn" onclick="quickRecordExpense('${day.id}', '交通：前往${nextStop.name.replace(/'/g, "")}', ${leg.estCost}, '🚗 交通')">➕ 記車資(${Math.round(leg.estCost/1000)}k)</button>` : ""}
+        </div>
+      </div>
+    `;
+
+    return stopHtml + legHtml;
+  }).join("");
+}
+
+window.toggleStopOpen = function(stopId) {
+  const el = document.getElementById("card_" + stopId);
+  if (el) el.classList.toggle("open");
+};
+
+window.setAsCurrentStop = function(stopId) {
+  state.currentStopId = stopId;
+  state.customStayOffset = 0;
+  saveState();
+  renderRadar();
+  renderCurrentDay();
+  document.getElementById("mainScroll").scrollTo({ top: 0, behavior: "smooth" });
+  showToast("📍 已設為目前所在站點，下一站時間已更新！");
+};
+
+window.toggleStopDone = function(stopId) {
+  if (state.doneStops.includes(stopId)) {
+    state.doneStops = state.doneStops.filter(id => id !== stopId);
+  } else {
+    state.doneStops.push(stopId);
+  }
+  saveState();
+  renderCurrentDay();
+};
+
+window.toggleCheck = function(key) {
+  state.checkedItems[key] = !state.checkedItems[key];
+  saveState();
+  renderCurrentDay();
+};
+
+// ==================== 記帳功能 ====================
+window.quickFillAmt = function(val) {
+  const inp = document.getElementById("expAmt");
+  document.getElementById("expCur").value = "VND";
+  inp.value = Number(inp.value || 0) + val;
+};
+
+window.quickRecordExpense = function(dayId, title, defaultVnd, cat) {
+  const input = prompt(`📝 記錄開銷【${title}】\n請確認或修改實際花費金額（單位：越南盾 VND）：`, defaultVnd);
+  if (input === null) return;
+  const vnd = Number(input);
+  if (isNaN(vnd) || vnd <= 0) {
+    showToast("⚠️ 金額無效，未新增");
+    return;
+  }
+  state.expenses.unshift({
+    id: Date.now(),
+    day: dayId,
+    cat: cat || "🍽️ 餐飲",
+    title,
+    vnd,
+    time: fmtHHMM(new Date())
+  });
+  saveState();
+  updateWalletHeader();
+  renderCurrentDay();
+  renderExpenseList();
+  showToast(`✅ 已記帳：${title} (${fmtVnd(vnd)})`);
+};
+
+function renderExpenseList() {
+  const box = document.getElementById("expListBox");
+  if (state.expenses.length === 0) {
+    box.innerHTML = `<div style="text-align:center;color:var(--muted);padding:18px;font-size:0.82rem">尚未記錄任何開銷，可直接點擊行程卡片上的「➕ 記這筆花費」快速記帳！</div>`;
+    return;
+  }
+  const dayNames = { d1: "Day 1", d2: "Day 2", d3: "Day 3", d4: "Day 4" };
+  box.innerHTML = state.expenses.map(e => `
+    <div class="exp-item">
+      <div>
+        <div style="font-weight:700">${e.cat}｜${e.title}</div>
+        <div style="font-size:0.72rem;color:var(--muted)">${dayNames[e.day] || "峴港"}・${e.time || ""}</div>
+      </div>
+      <div style="display:flex;align-items:center">
+        <div style="text-align:right">
+          <div style="font-weight:800;color:var(--ink)">${fmtVnd(e.vnd)}</div>
+          <div style="font-size:0.7rem;color:var(--muted)">≈ NT$${vndToTwd(e.vnd).toLocaleString()}</div>
+        </div>
+        <button class="del-btn" onclick="deleteExpense(${e.id})">刪除</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+window.deleteExpense = function(id) {
+  state.expenses = state.expenses.filter(e => e.id !== id);
+  saveState();
+  updateWalletHeader();
+  renderCurrentDay();
+  renderExpenseList();
+};
+
+document.getElementById("addExpBtn").addEventListener("click", () => {
+  const day = document.getElementById("expDay").value;
+  const cat = document.getElementById("expCat").value;
+  const title = document.getElementById("expTitle").value.trim() || cat;
+  const amt = Number(document.getElementById("expAmt").value);
+  const cur = document.getElementById("expCur").value;
+
+  if (!amt || amt <= 0) {
+    showToast("⚠️ 請輸入大於 0 的金額");
+    return;
+  }
+  const vnd = cur === "TWD" ? Math.round((amt / state.ratePer10k) * 10000) : amt;
+  state.expenses.unshift({
+    id: Date.now(),
+    day,
+    cat,
+    title,
+    vnd,
+    time: fmtHHMM(new Date())
+  });
+  document.getElementById("expTitle").value = "";
+  document.getElementById("expAmt").value = "";
+  saveState();
+  updateWalletHeader();
+  renderCurrentDay();
+  renderExpenseList();
+  showToast("✅ 已新增開銷紀錄！");
+});
+
+document.getElementById("clearExpBtn").addEventListener("click", () => {
+  if (confirm("確定要清空所有已記錄的開銷嗎？")) {
+    state.expenses = [];
+    saveState();
+    updateWalletHeader();
+    renderCurrentDay();
+    renderExpenseList();
+  }
+});
+
+// ==================== 預算設定 Modal ====================
+const modal = document.getElementById("budgetModal");
+document.getElementById("editBudgetBtn").addEventListener("click", () => {
+  document.getElementById("modalBudgetInp").value = state.totalBudgetVnd;
+  document.getElementById("modalRateInp").value = state.ratePer10k;
+  modal.classList.add("show");
+});
+document.getElementById("closeModalBtn").addEventListener("click", () => modal.classList.remove("show"));
+document.getElementById("saveModalBtn").addEventListener("click", () => {
+  const b = Number(document.getElementById("modalBudgetInp").value);
+  const r = Number(document.getElementById("modalRateInp").value);
+  if (b > 0) state.totalBudgetVnd = b;
+  if (r > 0) state.ratePer10k = r;
+  saveState();
+  updateWalletHeader();
+  renderCurrentDay();
+  renderExpenseList();
+  modal.classList.remove("show");
+  showToast("⚙️ 預算與匯率已更新！");
+});
+
+// ==================== 地圖檢視 ====================
+function renderMapView() {
+  const day = DAYS.find(d => d.id === state.activeDay && d.stops.length > 0) || DAYS[1];
+  const pills = document.getElementById("mapPills");
+  const frame = document.getElementById("mapFrame");
+  const stops = day.stops;
+  const allQueries = stops.map(s => s.q);
+
+  const opts = stops.map(s => ({
+    label: `${s.icon} ${s.name.split("：").pop().slice(0, 10)}`,
+    src: `https://maps.google.com/maps?q=${encodeURIComponent(s.q)}&z=15&output=embed`
+  }));
+
+  pills.innerHTML = opts.map((o, idx) => `
+    <button class="leg-btn ${idx === 0 ? "grab" : ""}" data-src="${o.src}">${o.label}</button>
+  `).join("");
+
+  if (opts[0]) frame.src = opts[0].src;
+
+  pills.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      pills.querySelectorAll("button").forEach(b => b.classList.remove("grab"));
+      btn.classList.add("grab");
+      frame.src = btn.dataset.src;
+    });
+  });
+
+  const fullUrl = `https://www.google.com/maps/dir/?api=1&origin=${encodeURIComponent(allQueries[0])}&destination=${encodeURIComponent(allQueries[allQueries.length - 1])}&waypoints=${allQueries.slice(1, -1).map(encodeURIComponent).join("%7C")}&travelmode=driving`;
+  document.getElementById("openFullDayRoute").href = fullUrl;
+}
+
+// ==================== 底部導覽列切換 ====================
+function switchNav(viewName) {
+  document.querySelectorAll("nav button").forEach(b => b.classList.toggle("active", b.dataset.v === viewName));
+  document.querySelectorAll(".view").forEach(v => v.classList.toggle("active", v.id === "v-" + viewName));
+  document.getElementById("dayTabs").style.display = (viewName === "plan" || viewName === "map") ? "flex" : "none";
+  document.getElementById("mainScroll").scrollTop = 0;
+}
+
+document.querySelectorAll("nav button").forEach(btn => {
+  btn.addEventListener("click", () => switchNav(btn.dataset.v));
+});
+document.getElementById("headerWalletBtn").addEventListener("click", () => switchNav("wallet"));
+
+// ==================== 手機時間每秒即時更新 + 即時天氣 API ====================
+function tickClock() {
+  const now = new Date();
+  document.getElementById("liveClock").textContent = now.toTimeString().slice(0, 8);
+  if (now.getSeconds() === 0) {
+    renderRadar();
+    renderCurrentDay();
+  }
+}
+
+async function fetchLiveWeather() {
+  try {
+    const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=16.0544&longitude=108.2022&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FHo_Chi_Minh&forecast_days=7");
+    const data = await res.json();
+    if (data && data.daily && data.daily.time) {
+      data.daily.time.forEach((dateStr, idx) => {
+        const dObj = DAYS.find(d => d.date === dateStr);
+        if (dObj) {
+          const minT = Math.round(data.daily.temperature_2m_min[idx]);
+          const maxT = Math.round(data.daily.temperature_2m_max[idx]);
+          const rainP = data.daily.precipitation_probability_max[idx];
+          dObj.weather.temp = `${minT}°C – ${maxT}°C`;
+          dObj.weather.rain = `${rainP}%`;
+        }
+      });
+      renderCurrentDay();
+    }
+  } catch (e) {
+    // 離線時使用內建預報資料
+  }
+}
+
+// 初始化
+updateWalletHeader();
+renderDayTabs();
+renderRadar();
+renderCurrentDay();
+renderExpenseList();
+renderMapView();
+tickClock();
+setInterval(tickClock, 1000);
+fetchLiveWeather();
+</script>
+</body>
+</html>
