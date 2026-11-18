@@ -535,14 +535,22 @@
     <!-- VIEW 4: 訂位連結與憑證 -->
     <section class="view" id="v-bookings">
       <div class="card">
-        <div class="sec-title">🔗 必存訂位與包車預約連結</div>
+        <div class="sec-title">🔗 必存餐廳訂位與接送預約連結</div>
         <div style="font-size:0.82rem;line-height:1.6;color:#334155">
           <div style="padding:8px 0;border-bottom:1px solid #f1f5f9">
-            <b>🍷 Le Comptoir 法式餐廳（Day 3 週六晚餐）</b><br>
-            座位少，若選擇吃法餐請務必私訊粉專訂位：
+            <b>🦞 Mộc Quán Seafood 木海鮮餐廳（Day 2 週五晚餐）</b><br>
+            米其林推薦超人氣海鮮，建議先透過 FB 粉專或地圖私訊訂位：
             <div class="link-btns">
-              <a class="btn-link book" target="_blank" href="https://www.facebook.com/lecomptoirdanang/">💬 FB 粉專私訊訂位</a>
-              <a class="btn-link secondary" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Le+Comptoir+16+Che+Lan+Vien+Da+Nang">📍 Google 地圖</a>
+              <a class="btn-link book" target="_blank" href="https://www.facebook.com/mocquandanang/">💬 FB 粉專私訊訂位</a>
+              <a class="btn-link secondary" target="_blank" href="https://www.google.com/maps/search/?api=1&query=H%E1%BA%A3i+s%E1%BA%A3n+M%E1%BB%99c+Qu%C3%A1n+%C4%90%C3%A0+N%E1%BA%B5ng+26+T%C3%B4+Hi%E1%BA%BFn+Th%C3%A0nh">📍 Google 地圖</a>
+            </div>
+          </div>
+          <div style="padding:8px 0;border-bottom:1px solid #f1f5f9">
+            <b>🍽️ Luk Lak Vietnamese Restaurant（Day 3 週六晚餐）</b><br>
+            米其林指南入選河畔越菜，鄰近龍橋，建議提前預約：
+            <div class="link-btns">
+              <a class="btn-link book" target="_blank" href="https://www.facebook.com/luklakdanang/">💬 FB 粉專私訊訂位</a>
+              <a class="btn-link secondary" target="_blank" href="https://www.google.com/maps/search/?api=1&query=Luk+Lak+Vietnamese+Restaurant+28+Bach+Dang+Da+Nang">📍 Google 地圖</a>
             </div>
           </div>
           <div style="padding:8px 0;border-bottom:1px solid #f1f5f9">
@@ -553,10 +561,10 @@
             </div>
           </div>
           <div style="padding:8px 0">
-            <b>🚐 Klook / KKday 機場接送 ＆ 五行山包車</b><br>
-            Day 1 峴港機場➔會安、Day 2 會安➔五行山➔山姆飯店：
+            <b>🚐 Klook / KKday 機場接送 ＆ 會安至峴港專車</b><br>
+            Day 1 峴港機場➔會安、Day 2 會安➔峴港山姆飯店：
             <div class="link-btns">
-              <a class="btn-link" target="_blank" href="https://www.klook.com/zh-TW/city/83-da-nang-things-to-do/">🚐 Klook 峴港包車/接機</a>
+              <a class="btn-link" target="_blank" href="https://www.klook.com/zh-TW/city/83-da-nang-things-to-do/">🚐 Klook 峴港接機/專車</a>
               <a class="btn-link secondary" target="_blank" href="https://www.kkday.com/zh-tw/city/da-nang">🚐 KKday 峴港專區</a>
             </div>
           </div>
@@ -641,7 +649,7 @@ const DAYS = [
       "越南網卡 / eSIM 安裝確認",
       "行動電源、充電線（切記行動電源不可放託運行李）",
       "防水拖鞋／涼鞋、防潑水薄外套、輕便摺疊傘",
-      "預訂 Day 1 峴港機場➔會安接機 & Day 2 會安➔五行山➔峴港包車"
+      "預訂 Day 1 峴港機場➔會安接機 & Mộc Quán 海鮮 / Luk Lak 可先線上訂位"
     ],
     stops: []
   },
@@ -760,54 +768,147 @@ const DAYS = [
   {
     id: "d2",
     tab: "Day 2",
-    sub: "11/20 (五) 五行山/西施",
+    sub: "11/20 (五) 會安➔峴港",
     date: "2026-11-20",
-    title: "Day 2｜五行山 ➔ 漢江西岸 ➔ 西施按摩 ➔ 海鮮",
+    title: "Day 2｜會安古鎮早午漫遊 ➔ 峴港逛街 ➔ 西施按摩 ➔ Mộc海鮮",
     weather: {
       temp: "23°C – 27°C",
       rain: "100% (陣雨/雷陣雨)",
-      desc: "全天有陣雨機率，山區石階較濕滑",
-      cloth: "👕 當日穿搭：過膝短褲或薄長褲（進五行山佛寺禮儀）＋防滑好走的鞋或涼鞋＋隨身雨傘。"
+      desc: "全天有陣雨機率，古鎮散步與市區逛街請帶摺疊傘",
+      cloth: "👕 當日穿搭：清爽透氣短袖短褲＋好走的鞋或防水涼鞋＋隨身摺疊傘。"
     },
-    checklistTitle: "✅ Day 2 前一晚＆退房前檢查清單",
+    checklistTitle: "✅ Day 2 出發古鎮前＆退房檢查清單",
     checklist: [
-      "會安飯店退房檢查：護照、手機充電器、行動電源",
-      "確認包車司機接送時間（會安 ➔ 中停五行山 1.5hr ➔ 峴港山姆飯店）",
-      "重要！皮包放足至少 150 萬越南盾現金（下午 Massage Tây Thi 門票+小費需付現）",
-      "穿過膝褲子與好走的鞋子（五行山洞穴階梯微濕滑）"
+      "08:40 先在 M Village 辦理退房並將行李寄放櫃檯（逛完古鎮順路拿行李去峴港）",
+      "退房檢查：護照、手機充電器、行動電源、房卡歸還",
+      "會安古鎮參觀進記古宅與福建會館可於入口買古鎮聯票（120,000 ₫）",
+      "重要！皮包放足至少 150 萬越南盾現金（傍晚 Massage Tây Thi 門票+小費需付現）",
+      "晚餐 Mộc Quán Seafood 生意極佳，可提前在 FB 預約"
     ],
     stops: [
       {
         id: "d2s1",
-        icon: "⛰️",
-        start: "09:30",
-        end: "11:30",
-        stayMins: 90,
-        name: "會安退房北上 ➔ 五行山 (Ngũ Hành Sơn)",
-        addr: "81 Huyền Trân Công Chúa, Hòa Hải, Ngũ Hành Sơn, Đà Nẵng",
-        q: "Marble Mountains Da Nang",
-        estCost: 610000,
-        costCat: "🚗 交通",
-        tags: ["順路必停", "電梯上山", "玄空洞佛光"],
+        icon: "🌉",
+        start: "09:00",
+        end: "09:40",
+        stayMins: 40,
+        name: "1. 日本橋 (Chùa Cầu / 來遠橋)",
+        addr: "Nguyễn Thị Minh Khai, Phường Minh An, Hội An",
+        q: "Japanese Covered Bridge Hoi An",
+        estCost: 190000,
+        costCat: "🎟️ 門票",
+        tags: ["會安地標", "古鎮聯票 120k", "從飯店搭 Grab 70k"],
         info: [
-          "位於會安往峴港正中間！包車約 500,000 ₫（行李直接放司機車上最輕鬆）",
-          "水山門票 40,000 ₫ ＋ 單程電梯 15,000 ₫（來回含門票約 110,000 ₫），必看最大洞穴「玄空洞」"
+          "08:40 飯店退房寄放行李後，搭 Grab 至日本橋（約 70,000 ₫）",
+          "拍照、欣賞 400 年歷史古橋，接著沿著陳富街 (Trần Phú) 古鎮黃牆街道散步（可買古鎮門票聯票 120,000 ₫ 參觀古宅與會館）"
         ],
         nextLeg: {
-          mode: "car",
-          modeTxt: "🚐 原包車續行 / 🚗 GrabCar",
-          travelMins: 15,
+          mode: "walk",
+          modeTxt: "🚶 古鎮街道散步",
+          travelMins: 5,
           estCost: 0,
-          desc: "搭原包車繼續往北 15 分鐘直達山姆飯店（費用已含在包車內；若單獨叫 GrabCar 約 100,000 ₫）。",
-          transitNote: "🚌 大眾運輸參考：峴港 2 號公車每 20 分鐘一班（票價 15,000 ₫），有大件行李建議搭車。"
+          desc: "沿 Nguyễn Thái Học / Trần Phú 古街往東散步約 4–5 分鐘（300 公尺）即達進記古宅。"
         }
       },
       {
         id: "d2s2",
+        icon: "🏮",
+        start: "09:40",
+        end: "10:15",
+        stayMins: 35,
+        name: "2. 進記古宅 (Nhà cổ Tấn Ký)",
+        addr: "101 Nguyễn Thái Học, Phường Minh An, Hội An",
+        q: "Tan Ky Old House 101 Nguyen Thai Hoc Hoi An",
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["200年歷史老宅", "中越日建築融合"],
+        info: [
+          "參觀保存最完整的 200 年傳統商人老宅，欣賞精緻木雕與天井結構（停留約 20–30 分鐘，使用古鎮聯票入場）"
+        ],
+        nextLeg: {
+          mode: "walk",
+          modeTxt: "🚶 古鎮街道散步",
+          travelMins: 5,
+          estCost: 0,
+          desc: "北轉至陳富街 (Trần Phú) 往東散步約 5 分鐘（350 公尺）即達福建會館。"
+        }
+      },
+      {
+        id: "d2s3",
+        icon: "🏯",
+        start: "10:20",
+        end: "11:10",
+        stayMins: 50,
+        name: "3. 福建會館 (Hội quán Phúc Kiến)",
+        addr: "46 Trần Phú, Phường Minh An, Hội An",
+        q: "Fujian Assembly Hall 46 Tran Phu Hoi An",
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["粉紅牌樓", "盤香與精緻雕刻"],
+        info: [
+          "會安最華麗宏偉的會館！拍攝三門牌樓建築、錦鯉庭院與媽祖殿堂雕刻（使用古鎮聯票入場）"
+        ],
+        nextLeg: {
+          mode: "walk",
+          modeTxt: "🚶 步行前往",
+          travelMins: 4,
+          estCost: 0,
+          desc: "從福建會館繼續往東走 4 分鐘（250 公尺）即達會安市場美食區。"
+        }
+      },
+      {
+        id: "d2s4",
+        icon: "🍜",
+        start: "11:15",
+        end: "12:25",
+        stayMins: 70,
+        name: "4. 會安市場 (Chợ Hội An) 吃高樓麵",
+        addr: "19 Trần Phú, Cẩm Châu, Hội An",
+        q: "Hoi An Central Market 19 Tran Phu",
+        estCost: 100000,
+        costCat: "🍽️ 餐飲",
+        tags: ["高樓麵 Cao Lầu", "白玫瑰水餃", "會安道地小吃"],
+        info: [
+          "在市場美食區品嚐會安獨有的「高樓麵 (Cao Lầu，推薦攤位 Bà Lễ 或 Liên)」、白玫瑰或炸雲吞，一碗約 40,000–50,000 ₫！"
+        ],
+        nextLeg: {
+          mode: "walk",
+          modeTxt: "🚶 步行至秋盆河岸",
+          travelMins: 4,
+          estCost: 0,
+          desc: "走出市場往南 200 公尺即達秋盆河岸 (Bạch Đằng 街) 咖啡廳群。"
+        }
+      },
+      {
+        id: "d2s5",
+        icon: "☕",
+        start: "12:30",
+        end: "13:30",
+        stayMins: 60,
+        name: "5. 會安河岸咖啡廳（喝越南咖啡・休息拍照）",
+        addr: "Bạch Đằng, Phường Minh An, Hội An (秋盆河岸)",
+        q: "The Cargo Club Bạch Đằng Hội An",
+        estCost: 85000,
+        costCat: "🍽️ 餐飲",
+        tags: ["秋盆河景", "越南滴漏/椰子咖啡"],
+        info: [
+          "在秋盆河畔吹風喝越南冰奶咖啡 (Cà phê sữa đá) 或椰子咖啡，拍河岸木船美景休息"
+        ],
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar（回飯店拿行李直奔峴港）",
+          travelMins: 45,
+          estCost: 350000,
+          desc: "叫 GrabCar 先繞回 M Village 拿寄放的行李，直接北上前往峴港山姆飯店（總車程約 45 分鐘，車資約 350,000 ₫）。",
+          transitNote: "🚌 大眾運輸參考：LK02 公車每 30 分鐘一班往峴港（票價 30,000 ₫），但有行李搭 GrabCar 直達飯店最省時。"
+        }
+      },
+      {
+        id: "d2s6",
         icon: "🏨",
-        start: "11:45",
-        end: "12:15",
-        stayMins: 30,
+        start: "14:15",
+        end: "14:40",
+        stayMins: 25,
         name: "峴港山姆飯店和公寓 (Sam Hotel) 放行李",
         addr: "Sam Hotel and Apartment Da Nang",
         q: "Sam Hotel and Apartment Da Nang",
@@ -815,7 +916,7 @@ const DAYS = [
         costCat: "🎟️ 門票",
         tags: ["Trip.com 已付", "編號 1616334979812577"],
         info: [
-          "先寄放行李或辦理入住，輕裝前往漢江西岸吃午餐"
+          "辦理 Check-in 放妥行李，輕裝出發在峴港市區逛街"
         ],
         nextLeg: {
           mode: "grab",
@@ -823,69 +924,23 @@ const DAYS = [
           travelMins: 10,
           estCost: 60000,
           bikeCost: 25000,
-          desc: "過橋前往漢江西岸 Bếp Lụa 餐廳（GrabCar 約 60,000 ₫ / GrabBike 約 25,000 ₫）。"
+          desc: "過橋前往漢江西岸的漢市場與粉紅大教堂商圈（GrabCar 約 60,000 ₫ / GrabBike 約 25,000 ₫）。"
         }
       },
       {
-        id: "d2s3",
-        icon: "🍲",
-        start: "12:30",
-        end: "13:45",
-        stayMins: 75,
-        name: "午餐：Bếp Lụa 越式餐廳",
-        addr: "94 Bạch Đằng, Hải Châu, Đà Nẵng 550000",
-        q: "Bếp Lụa 94 Bạch Đằng Đà Nẵng",
-        estCost: 250000,
-        costCat: "🍽️ 餐飲",
-        tags: ["漢江河景", "有冷氣", "道地越菜"],
-        info: [
-          "環境舒適有冷氣的越式家常菜與春捲，一人用餐約 20–25 萬盾"
-        ],
-        nextLeg: {
-          mode: "walk",
-          modeTxt: "🚶 步行前往",
-          travelMins: 4,
-          estCost: 0,
-          desc: "沿漢江 Bạch Đằng 街往南散步 4 分鐘即達漢市場與粉紅大教堂。"
-        }
-      },
-      {
-        id: "d2s4",
-        icon: "⛪",
-        start: "13:50",
-        end: "15:00",
-        stayMins: 70,
-        name: "漢市場 (Chợ Hàn) ＆ 峴港粉紅大教堂",
-        addr: "156 Trần Phú, Hải Châu 1, Hải Châu, Đà Nẵng",
-        q: "Da Nang Cathedral 156 Tran Phu",
-        estCost: 200000,
-        costCat: "🛍️ 購物",
-        tags: ["免費景點", "換匯划算", "買腰果芒果乾"],
-        info: [
-          "漢市場一樓買腰果、咖啡、果乾（記得殺價），旁邊銀樓換越南盾匯率極佳；拍完粉紅大教堂走去喝咖啡"
-        ],
-        nextLeg: {
-          mode: "walk",
-          modeTxt: "🚶 步行前往",
-          travelMins: 5,
-          estCost: 0,
-          desc: "從粉紅大教堂轉進 Phạm Hồng Thái 街，步行約 5 分鐘即達 Trình cà phê。"
-        }
-      },
-      {
-        id: "d2s5",
-        icon: "☕",
-        start: "15:05",
-        end: "16:15",
-        stayMins: 70,
-        name: "下午茶：Trình cà phê（招牌酪梨咖啡）",
-        addr: "25 Phạm Hồng Thái, Hải Châu, Đà Nẵng 55000",
+        id: "d2s7",
+        icon: "🛍️",
+        start: "14:50",
+        end: "16:35",
+        stayMins: 105,
+        name: "峴港市區逛街：漢市場 ➔ 粉紅大教堂 ➔ Trình cà phê",
+        addr: "156 Trần Phú / 25 Phạm Hồng Thái, Hải Châu, Đà Nẵng",
         q: "Trình cà phê 25 Phạm Hồng Thái Đà Nẵng",
-        estCost: 65000,
-        costCat: "🍽️ 餐飲",
-        tags: ["清單精選", "綠意庭園", "必點酪梨咖啡"],
+        estCost: 265000,
+        costCat: "🛍️ 購物",
+        tags: ["漢市場買伴手禮", "粉紅大教堂", "Trình 酪梨咖啡"],
         info: [
-          "在地超人氣庭園咖啡廳，必點 Cà Phê Bơ（酪梨冰沙咖啡，約 55,000–65,000 ₫）"
+          "三個點走路都在 3–5 分鐘內！先逛漢市場買腰果咖啡、拍粉紅大教堂，再去 Trình cà phê（25 Phạm Hồng Thái）喝招牌酪梨咖啡休息"
         ],
         nextLeg: {
           mode: "grab",
@@ -893,15 +948,14 @@ const DAYS = [
           travelMins: 20,
           estCost: 130000,
           bikeCost: 50000,
-          desc: "從市區往西北蓮沼區前往必去的西施按摩（約 9 公里，GrabCar 約 130,000 ₫ / GrabBike 約 50,000 ₫）。",
-          transitNote: "🚌 大眾運輸參考：市區公車 R16 線每 25 分鐘一班，但需步行轉乘約 45 分鐘，強烈建議直接叫 Grab。"
+          desc: "從市區往西北蓮沼區前往必去的西施按摩（約 9 公里，GrabCar 約 130,000 ₫ / GrabBike 約 50,000 ₫）。"
         }
       },
       {
-        id: "d2s6",
+        id: "d2s8",
         icon: "🔥",
-        start: "16:35",
-        end: "18:35",
+        start: "16:55",
+        end: "18:55",
         stayMins: 120,
         name: "必去：Massage Tây Thi (西施) 或 Hải Vân",
         addr: "32-34 Hồ Tùng Mậu, Hòa Khánh, Đà Nẵng 550000",
@@ -920,24 +974,26 @@ const DAYS = [
           travelMins: 22,
           estCost: 150000,
           bikeCost: 60000,
-          desc: "沿峴港海灣大橋往東岸美溪沙灘方向，直達 Bé Ni 2 海鮮大排檔（GrabCar 約 150,000 ₫）。"
+          desc: "按摩完搭 Grab 回東岸美溪沙灘區的米其林推薦 Mộc Quán 海鮮餐廳（GrabCar 約 150,000 ₫）。"
         }
       },
       {
-        id: "d2s7",
+        id: "d2s9",
         icon: "🦞",
-        start: "19:00",
-        end: "20:45",
-        stayMins: 105,
-        name: "晚餐：Bé Ni 2 海景海鮮大排檔",
-        addr: "228 Võ Nguyên Giáp, An Hải, Đà Nẵng 550000",
-        q: "Hải sản Bé Ni 2 228 Võ Nguyên Giáp Đà Nẵng",
-        estCost: 550000,
+        start: "19:20",
+        end: "21:00",
+        stayMins: 100,
+        name: "晚餐：Mộc Quán Seafood（米其林推薦木海鮮餐廳）",
+        addr: "26 Tô Hiến Thành, Phước Mỹ, Sơn Trà, Đà Nẵng 550000",
+        q: "Hải sản Mộc Quán Đà Nẵng 26 Tô Hiến Thành",
+        estCost: 500000,
         costCat: "🍽️ 餐飲",
-        tags: ["美溪海景第一排", "現撈活海鮮", "價格透明"],
+        tags: ["米其林推薦", "取代 Bé Ni 2", "必點蒜蓉奶油蝦/烤生蠔"],
         info: [
-          "在水族箱直接挑選海鮮秤重並選料理方式（必點蒜蓉大蝦、烤扇貝、炒空心菜），吃完搭 Grab 回山姆飯店（約 45,000 ₫）"
+          "環境超乾淨、有冷氣室與庭園的米其林推薦海鮮餐廳！價格透明公道，吃完回山姆飯店車程僅 4 分鐘"
         ],
+        bookUrl: "https://www.facebook.com/mocquandanang/",
+        bookTxt: "🦞 Mộc Quán FB 粉專訂位",
         nextLeg: null
       }
     ]
@@ -945,9 +1001,9 @@ const DAYS = [
   {
     id: "d3",
     tab: "Day 3",
-    sub: "11/21 (六) 美溪/龍橋",
+    sub: "11/21 (六) 廣南米粉/Luk Lak",
     date: "2026-11-21",
-    title: "Day 3｜美溪慢活 ➔ 越式洗頭 ➔ 靈應寺 ➔ 龍橋噴火",
+    title: "Day 3｜廣南米粉 ➔ 越式洗頭 ➔ 靈應寺 ➔ Luk Lak ➔ 龍橋噴火 ➔ 烤雞腳",
     weather: {
       temp: "24°C – 26°C",
       rain: "100% (陣雨)",
@@ -958,16 +1014,16 @@ const DAYS = [
     checklist: [
       "山姆飯店退房檢查：護照、房卡歸還、充電頭",
       "確認 Ngọc Linh Spa 越式洗頭時段（就在新飯店走路 3 分鐘處）",
-      "若晚餐決定吃 Le Comptoir 法式餐廳，確認已完成訂位",
-      "設定 20:30 鬧鐘提醒前往龍橋卡位看 21:00 週六限定噴火秀"
+      "確認週六晚餐 Luk Lak Vietnamese Restaurant 訂位",
+      "設定 20:30 鬧鐘提醒從 Luk Lak 散步去龍橋看 21:00 週六限定噴火秀"
     ],
     stops: [
       {
         id: "d3s1",
         icon: "🏨",
         start: "11:00",
-        end: "11:45",
-        stayMins: 45,
+        end: "11:40",
+        stayMins: 40,
         name: "換住美溪區：Nexus House An Thượng",
         addr: "Nexus House An Thượng - Boutique Hotel Near My Khe Beach",
         q: "Nexus House An Thuong Da Nang",
@@ -975,44 +1031,46 @@ const DAYS = [
         costCat: "🚗 交通",
         tags: ["Agoda 已付", "編號 1798543709", "美溪商圈核心"],
         info: [
-          "從山姆飯店搭 GrabCar 過來僅約 45,000 ₫，先寄放行李後直接步行逛 An Thượng 外國人街區"
+          "從山姆飯店搭 GrabCar 過來僅約 45,000 ₫，先寄放行李後出發吃道地廣南米粉"
         ],
         nextLeg: {
           mode: "walk",
-          modeTxt: "🚶 步行前往",
-          travelMins: 3,
+          modeTxt: "🚶 步行 / 🛵 GrabBike",
+          travelMins: 6,
           estCost: 0,
-          desc: "出飯店步行 3 分鐘（約 220 公尺）即達 Banh Mi Phuong。"
+          bikeCost: 20000,
+          desc: "從 Nexus House 步行約 6 分鐘（500 公尺）即達美溪區最知名的廣南米粉 Mì Quảng Bà Mua。"
         }
       },
       {
         id: "d3s2",
-        icon: "🥖",
-        start: "12:00",
-        end: "13:00",
+        icon: "🍜",
+        start: "11:50",
+        end: "12:50",
         stayMins: 60,
-        name: "午餐：Banh Mi Phuong 越式法國麵包",
-        addr: "49 Trần Bạch Đằng, Ngũ Hành Sơn, Đà Nẵng 550000",
-        q: "Banh Mi Phuong 49 Trần Bạch Đằng Đà Nẵng",
-        estCost: 65000,
+        name: "午餐：廣南米粉 Mì Quảng Bà Mua（＋順買 Banh Mi Phuong）",
+        addr: "40 Ngũ Hành Sơn, Bắc Mỹ Phú, Ngũ Hành Sơn, Đà Nẵng",
+        q: "Mì Quảng Bà Mua 40 Ngũ Hành Sơn Đà Nẵng",
+        estCost: 90000,
         costCat: "🍽️ 餐飲",
-        tags: ["酥脆法棍", "綜合烤肉口味"],
+        tags: ["中越靈魂美食", "薑黃濃郁湯底", "附烤芝麻米餅"],
         info: [
-          "外皮超酥脆的招牌越式法國麵包，配一杯越式冰咖啡約 65,000 ₫"
+          "必吃正宗廣南米粉 (Mì Quảng)！推薦點綜合口味 Mì Quảng Đặc Biệt（含鮮蝦、豬肉、雞肉、鵪鶉蛋，把烤米餅剝碎拌入濃湯超香，一碗約 55,000–65,000 ₫）",
+          "走回洗頭店途中會經過清單上的 Banh Mi Phuong（49 Trần Bạch Đằng），可順手買法國麵包！（若想吃米其林必比登 Mì Quảng 1A 則在 1A Hải Phòng）"
         ],
         nextLeg: {
           mode: "walk",
           modeTxt: "🚶 步行前往",
-          travelMins: 3,
+          travelMins: 6,
           estCost: 0,
-          desc: "從 49 Trần Bạch Đằng 轉入 Phan Tôn 街，步行 3 分鐘（約 250 公尺）即達 Ngọc Linh Spa。"
+          desc: "從廣南米粉店轉進 Phan Tôn 街，散步約 6 分鐘即達 Ngọc Linh Spa。"
         }
       },
       {
         id: "d3s3",
         icon: "💆",
-        start: "13:10",
-        end: "15:10",
+        start: "13:00",
+        end: "15:00",
         stayMins: 120,
         name: "放鬆：Ngọc Linh Spa 越式洗頭＆按摩",
         addr: "04 Phan Tôn, Ngũ Hành Sơn, Đà Nẵng 550000",
@@ -1021,7 +1079,7 @@ const DAYS = [
         costCat: "💆 按摩",
         tags: ["清單收藏兩次", "越式洗頭", "草本肩頸放鬆"],
         info: [
-          "您在清單裡特別存了兩次的店家！享受正宗越式洗頭、敷臉、掏耳與肩頸按摩"
+          "您在清單裡特別存了兩次的店家！享受正宗越式洗頭、敷臉、掏耳與肩頸按摩，做完回旁邊飯店剛好拿房卡 Check-in"
         ],
         bookUrl: "https://www.google.com/maps/search/?api=1&query=Ngoc+Linh+Spa+04+Phan+Ton+Da+Nang",
         bookTxt: "📍 開啟地圖頁面預約",
@@ -1030,7 +1088,7 @@ const DAYS = [
           modeTxt: "🚗 GrabCar（建議請司機等候）",
           travelMins: 15,
           estCost: 250000,
-          desc: "沿美溪海岸線往北上山茶半島靈應寺（單程約 100,000 ₫；因山上有時較難叫車，建議跟司機談加 50,000 ₫ 在停車場等 45 分鐘載你下山，來回共約 250,000 ₫）。"
+          desc: "沿美溪海岸線往北上山茶半島靈應寺（單程約 100,000 ₫；建議跟司機談加 50,000 ₫ 在停車場等 45 分鐘載你下山，來回共約 250,000 ₫）。"
         }
       },
       {
@@ -1050,54 +1108,77 @@ const DAYS = [
         ],
         nextLeg: {
           mode: "grab",
-          modeTxt: "🚗 原車或 GrabCar 下山",
-          travelMins: 15,
+          modeTxt: "🚗 原車或 GrabCar 下山至漢江畔",
+          travelMins: 18,
           estCost: 0,
-          desc: "搭原車返回美溪沙灘區吃晚餐（車資已計入上一段來回 250,000 ₫）。"
+          desc: "從靈應寺下山直達漢江河畔的 Luk Lak 越式餐廳吃晚餐（車資已含在包車來回預算內）。"
         }
       },
       {
         id: "d3s5",
-        icon: "🍗",
-        start: "17:30",
-        end: "19:45",
+        icon: "🍽️",
+        start: "18:00",
+        end: "20:00",
         stayMins: 120,
-        name: "晚餐：Chân Gà Nướng Hai Còi 烤雞腳（或 Le Comptoir 法餐）",
-        addr: "91 Nguyễn Văn Thoại, An Hải, Đà Nẵng 550000",
-        q: "Chân Gà Nướng Hai Còi 91 Nguyễn Văn Thoại Đà Nẵng",
-        estCost: 250000,
+        name: "晚餐：Luk Lak Vietnamese Restaurant（米其林入選）",
+        addr: "28 Bạch Đằng, Thạch Thang, Hải Châu, Đà Nẵng 550000",
+        q: "Luk Lak Vietnamese Restaurant 28 Bạch Đằng Đà Nẵng",
+        estCost: 380000,
         costCat: "🍽️ 餐飲",
-        tags: ["在地炭烤雞腳", "或選米其林級法餐 Le Comptoir"],
+        tags: ["米其林指南入選", "名廚 Madame Bình", "漢江河景"],
         info: [
-          "方案 A（接地氣）：Chân Gà Nướng Hai Còi 蜜汁炭烤雞腳＋烤雞翅配啤酒（約 250,000 ₫）",
-          "方案 B（精緻大餐）：Le Comptoir 法式餐廳（16 Chế Lan Viên，套餐約 1,500,000 ₫，需提前訂位）"
+          "由前索菲特主廚 Madame Bình 主理的米其林入選餐廳！必點脆皮五花肉米紙捲、搖搖牛肉 (Bò Lúc Lắc)，吃完沿漢江散步就能去看龍橋噴火秀！"
         ],
-        bookUrl: "https://www.facebook.com/lecomptoirdanang/",
-        bookTxt: "🍷 Le Comptoir FB 訂位",
+        bookUrl: "https://www.facebook.com/luklakdanang/",
+        bookTxt: "🍽️ Luk Lak FB 訂位",
         nextLeg: {
           mode: "grab",
-          modeTxt: "🚗 GrabCar / 🛵 GrabBike",
-          travelMins: 7,
-          estCost: 50000,
-          bikeCost: 25000,
-          desc: "前往龍橋橋頭看 21:00 噴火秀（GrabCar 約 50,000 ₫ / GrabBike 約 25,000 ₫）。",
-          transitNote: "🕘 固定演出時刻：龍橋噴火噴水秀僅在週六、週日 21:00 準時演出（20:45 開始封橋管制車輛，請在 20:40 前抵達龍頭處）。"
+          modeTxt: "🚶 河畔散步 / 🚗 GrabCar",
+          travelMins: 6,
+          estCost: 35000,
+          bikeCost: 20000,
+          desc: "沿漢江 Bạch Đằng 大道往南散步約 15 分鐘（或搭 Grab 5 分鐘，約 35,000 ₫）前往龍橋觀看 21:00 噴火秀。",
+          transitNote: "🕘 固定演出時刻：龍橋噴火噴水秀僅在週六、週日 21:00 準時演出（20:45 開始封橋管制車輛）。"
         }
       },
       {
         id: "d3s6",
         icon: "🐉",
         start: "20:35",
-        end: "21:30",
-        stayMins: 55,
+        end: "21:20",
+        stayMins: 45,
         name: "週六限定：龍橋 (Cầu Rồng) 21:00 噴火噴水秀",
         addr: "Cầu Rồng, Hải Châu, Đà Nẵng",
         q: "Dragon Bridge Da Nang",
-        estCost: 50000,
-        costCat: "🚗 交通",
-        tags: ["週六日 21:00 限定", "免費觀賞", "回程 Grab 5萬盾"],
+        estCost: 0,
+        costCat: "🎟️ 門票",
+        tags: ["週六日 21:00 限定", "免費觀賞"],
         info: [
-          "21:00 準時先噴火 9 次、接著噴水 3 次！站在龍頭兩側河岸拍最清楚又不會被噴濕，看完叫 Grab 回 Nexus House"
+          "21:00 準時先噴火 9 次、接著噴水 3 次！站在龍頭兩側河岸拍最清楚又不會被噴濕"
+        ],
+        nextLeg: {
+          mode: "grab",
+          modeTxt: "🚗 GrabCar / 🛵 GrabBike",
+          travelMins: 7,
+          estCost: 50000,
+          bikeCost: 25000,
+          desc: "看完噴火秀過橋回美溪飯店旁吃炭烤雞腳配啤酒當宵夜（GrabCar 約 50,000 ₫）。"
+        }
+      },
+      {
+        id: "d3s7",
+        icon: "🍗",
+        start: "21:30",
+        end: "22:45",
+        stayMins: 75,
+        name: "宵夜小酌：Chân Gà Nướng Hai Còi 炭烤雞腳",
+        addr: "91 Nguyễn Văn Thoại, An Hải, Đà Nẵng 550000",
+        q: "Chân Gà Nướng Hai Còi 91 Nguyễn Văn Thoại Đà Nẵng",
+        estCost: 200000,
+        costCat: "🍽️ 餐飲",
+        tags: ["清單必吃", "蜜汁炭烤雞腳/雞翅", "走回飯店8分鐘"],
+        info: [
+          "在地超人氣宵夜！炭烤雞腳、雞翅配冰啤酒，吃完散步 8 分鐘就回到 Nexus House 飯店睡覺"
         ],
         nextLeg: null
       }
